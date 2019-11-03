@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                                                     android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bar_height">
+        <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bar_height"
+                android:background="?attr/colorPrimaryDark"
+                android:theme="?attr/actionBarTheme"
+                android:minHeight="@dimen/bar_height"
+                android:id="@+id/search_toolbar"
+                app:layout_scrollFlags="scroll|enterAlways">
+            <SearchView
+                    android:layout_marginRight="20dp"
+                    android:id="@+id/search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:id="@+id/search_swipe_refresh">
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+                    android:visibility="invisible"
+                    android:id="@+id/search_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:indeterminate="true"
+                    app:mpb_progressStyle="horizontal"
+                    app:mpb_indeterminateTint="@color/netflixRed"
+                    app:mpb_useIntrinsicPadding="false"
+                    app:mpb_showProgressBackground="false"
+                    style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal.NoPadding"
+                    app:layout_constraintTop_toTopOf="parent"/>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/result_rv"
+                    app:layout_constraintTop_toTopOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

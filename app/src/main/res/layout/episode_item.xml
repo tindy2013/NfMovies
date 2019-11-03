@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools" android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:background="@android:color/transparent"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp"
+            android:layout_height="50dp">
+        <TextView
+                android:textColor="@color/colorAccent"
+                android:text="episode_name"
+                android:maxEms="2"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:id="@+id/episode_name" android:layout_weight="7"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+    <androidx.appcompat.widget.AppCompatImageView
+            android:scaleType="center"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:id="@+id/episode_play" android:layout_weight="1"
+            app:srcCompat="@drawable/ic_play_circle_filled_white_24dp"/>
+    <androidx.appcompat.widget.AppCompatImageView
+            android:scaleType="center"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:id="@+id/episode_upload" android:layout_weight="1"
+            app:srcCompat="@drawable/ic_cloud_upload_white_24dp"/>
+    <androidx.appcompat.widget.AppCompatImageView
+            android:scaleType="center"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:id="@+id/episode_copy" android:layout_weight="1"
+            app:srcCompat="@drawable/ic_filter_none_white_24dp"/>
+
+</LinearLayout>

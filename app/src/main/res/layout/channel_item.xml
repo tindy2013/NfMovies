@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                   xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="150dp"
+                                   android:id="@+id/channel_card"
+                                   android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <ImageView
+                android:clickable="true"
+                android:scaleType="centerInside"
+                android:layout_width="match_parent"
+                android:layout_height="90dp" app:srcCompat="@drawable/placeholder"
+                android:id="@+id/channel_img"/>
+        <TextView
+                android:background="@color/colorPrimaryDark"
+                android:textAlignment="center"
+                android:text="title"
+                android:textColor="@color/colorAccent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/channel_title"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

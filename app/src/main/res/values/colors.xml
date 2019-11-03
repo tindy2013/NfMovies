@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#ffffff</color>
+    <color name="colorUnchecked">#808080</color>
+    <color name="transparentDark">#DD000000</color>
+    <color name="netflixRed">#E50914</color>
+    <color name="transparentPrimary">#80000000</color>
+</resources>

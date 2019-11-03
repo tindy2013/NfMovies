@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+            app:icon="@drawable/ic_play_circle_filled_white_24dp"
+            app:key="player"
+            app:title="播放器设置"
+            app:summary="%s"
+            app:entries="@array/player"
+            app:defaultValue="1"
+            app:entryValues="@array/player_values"/>
+    <Preference
+            app:icon="@drawable/ic_info_white_24dp"
+            app:key="about"
+            app:title="关于本软件"
+            app:summary="About"/>
+    <Preference android:title="联系我们"
+                app:summary="Contact us"
+                app:icon="@drawable/ic_telegram_white_24dp">
+        <intent android:action="android.intent.action.VIEW"
+                android:data="https://t.me/joinchat/KmUaGRMWdO29JVd3wcCHCg" />
+    </Preference>
+</androidx.preference.PreferenceScreen>

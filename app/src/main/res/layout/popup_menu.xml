@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:background="@color/transparentDark">
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/menu_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+    </androidx.recyclerview.widget.RecyclerView>
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="250dp" app:srcCompat="@drawable/menu_gradient_bg"
+            android:id="@+id/menu_gradient_bg"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageButton
+            android:background="@drawable/circle_button_shape"
+            android:scaleType="centerInside"
+            android:layout_width="50dp"
+            android:layout_height="50dp" app:srcCompat="@drawable/ic_close_black_24dp"
+            android:id="@+id/menu_close_button" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="40dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
