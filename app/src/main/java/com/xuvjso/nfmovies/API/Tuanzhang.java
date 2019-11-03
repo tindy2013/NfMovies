@@ -104,10 +104,6 @@ public class Tuanzhang implements ISite {
     public String getName() {
         return NAME;
     }
-    @Override
-    public List<Movie> getSinglePage(String url, int page) {
-        return null;
-    }
 
     @Override
     public Category search(String str) {

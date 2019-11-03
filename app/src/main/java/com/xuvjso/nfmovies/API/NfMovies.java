@@ -124,14 +124,6 @@ public class NfMovies implements ISite {
     }
 
     @Override
-    public List<Movie> getSinglePage(String url, int page) {
-        if (url.contains("/list")) return getList(url, page);
-        if (url.contains("/search.php")) return getSearch(url, page);
-
-        return null;
-    }
-
-    @Override
     public Category search(String str) {
         String html = OkHttpUtil.getInstance().getHtml(HOST + "/search.php?searchword="+ str,
                 HOST);
@@ -174,9 +166,6 @@ public class NfMovies implements ISite {
         return null;
     }
 
-    private List<Movie> getList(String url, int page) {
-        return null;
-    }
 
     public static synchronized NfMovies getInstance() {
         if (mInstance == null) {
@@ -195,7 +184,6 @@ public class NfMovies implements ISite {
         if (html == null) return null;
         Document doc = Jsoup.parse(html);
         Elements elements = doc.getElementsByClass("hy-layout clearfix");
-        String[] nf = new String[]{"奈菲独家", "最近热播", "电影", "电视剧", "综艺", "动漫"};
         List<Category> categories = new ArrayList<>();
         for (int i = 1; i < elements.size(); i++) {
             Element element = elements.get(i);
