@@ -9,14 +9,16 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class OkHttpUtil {
-    public final static int READ_TIMEOUT = 10;
-    public final static int CONNECT_TIMEOUT = 30;
+    public final static int READ_TIMEOUT = 5;
+    public final static int CONNECT_TIMEOUT = 5;
+    public final static int WRITE_TIMEOUT = 5;
     private static OkHttpUtil mInstance;
     private OkHttpClient mOkHttpClient;
 
     private OkHttpUtil() {
         okhttp3.OkHttpClient.Builder ClientBuilder = new okhttp3.OkHttpClient.Builder();
         ClientBuilder.readTimeout(READ_TIMEOUT, TimeUnit.SECONDS);
+        ClientBuilder.writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS);
         ClientBuilder.connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS);
         mOkHttpClient = ClientBuilder.build();
     }

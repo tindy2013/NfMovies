@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:visibility="invisible"
+        android:id="@+id/progressbar"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:indeterminate="true"
+        app:mpb_progressStyle="horizontal"
+        app:mpb_indeterminateTint="@color/netflixRed"
+        app:mpb_useIntrinsicPadding="false"
+        app:mpb_showProgressBackground="false"
+        style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal.NoPadding"
+        app:layout_constraintTop_toTopOf="parent"/>

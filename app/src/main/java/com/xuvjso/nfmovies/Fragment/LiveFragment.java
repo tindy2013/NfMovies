@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.xuvjso.nfmovies.Adapter.ChannelAdapter;
+import com.xuvjso.nfmovies.Adapter.ChannelGridViewAdapter;
 import com.xuvjso.nfmovies.Entity.Channel;
 import com.xuvjso.nfmovies.Listener.ChannelClickListener;
 import com.xuvjso.nfmovies.Listener.PopupMenuItemClickListener;
@@ -42,7 +42,7 @@ public class LiveFragment extends BaseFragment implements PopupMenuItemClickList
     private MaterialProgressBar progressBar;
     private TextView liveMenu;
     private View popupMenuView;
-    private ChannelAdapter adapter;
+    private ChannelGridViewAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     public LiveFragment() {
     }
@@ -67,8 +67,8 @@ public class LiveFragment extends BaseFragment implements PopupMenuItemClickList
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_live, container, false);
         gridView = view.findViewById(R.id.live_grid);
-        liveMenu = view.findViewById(R.id.live_menu);
-        progressBar = view.findViewById(R.id.live_progress);
+        liveMenu = view.findViewById(R.id.toolbar_menu);
+        progressBar = view.findViewById(R.id.progressbar);
         swipeRefreshLayout = view.findViewById(R.id.live_swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -89,7 +89,7 @@ public class LiveFragment extends BaseFragment implements PopupMenuItemClickList
 
     @Override
     public void onPopupMenuItemClick(int position) {
-        adapter = new ChannelAdapter(getContext(), channels.get(position), LiveFragment.this);
+        adapter = new ChannelGridViewAdapter(getContext(), channels.get(position), LiveFragment.this);
         gridView.setAdapter(adapter);
         popupMenu.dismiss();
         liveMenu.setText(menus.get(position));
@@ -162,7 +162,7 @@ public class LiveFragment extends BaseFragment implements PopupMenuItemClickList
                 channels.add(lives.get(key.get(i)));
             }
 
-            adapter = new ChannelAdapter(getContext(), channels.get(0), LiveFragment.this);
+            adapter = new ChannelGridViewAdapter(getContext(), channels.get(0), LiveFragment.this);
             gridView.setAdapter(adapter);
         }
     }

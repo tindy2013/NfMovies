@@ -69,10 +69,7 @@ public class BaseFragment extends SupportFragment implements MovieItemClickListe
         String i = prefs.getString("player", "1");
 
         Intent intent = new Intent(getContext(), MovieDetailActivity.class);
-        intent.putExtra("name", movie.getName());
-        intent.putExtra("img", movie.getImg());
-        intent.putExtra("url", movie.getUrl());
-        intent.putExtra("type", movie.getSite());
+        intent.putExtra("movie", movie);
         intent.putExtra("player", Integer.valueOf(i));
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
                 getActivity(), img, "sharedImg"

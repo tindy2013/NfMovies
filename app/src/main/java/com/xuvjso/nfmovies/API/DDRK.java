@@ -18,10 +18,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DDRK implements ISite {
-    private static final String HOST = "http://ddrk.me";
+    public static final String HOST = "http://ddrk.me";
     public static final String NAME = "低端影视";
     private static DDRK mInstance;
-    private static final Type type = Type.DDRK;
+    private static final Site SITE = Site.DDRK;
 
     public static synchronized DDRK getInstance() {
         if (mInstance == null) {
@@ -61,7 +61,7 @@ public class DDRK implements ISite {
                 Matcher matcher = p.matcher(t.getElementsByClass("post-box-image").get(0).attr("style"));
                 if (matcher.find()) movie.setImg(matcher.group(1));
                 else Log.i("DDRK", movie.getName() + "未找到图片");
-                movie.setSite(type);
+                movie.setSite(SITE);
                 movies.add(movie);
             }
             categories.add(new Category(name, movies, url));
@@ -70,8 +70,8 @@ public class DDRK implements ISite {
     }
 
     @Override
-    public Type getType() {
-        return type;
+    public Site getSite() {
+        return SITE;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class DDRK implements ISite {
         Matcher dm = dp.matcher(html);
         if (dm.find()) movie.setDescription(dm.group(1));
 
-        if (movie.getImg().equals("none")) {
+        if (movie.getImg() == null) {
             Matcher matcher = ip.matcher(html);
             if (matcher.find()) movie.setImg(matcher.group(1));
         }
@@ -143,8 +143,7 @@ public class DDRK implements ISite {
         for (Element t: elements) {
             if (t.attr("class").contains("img")) continue;
             Movie m = new Movie();
-            m.setImg("none");
-            m.setSite(type);
+            m.setSite(SITE);
             String href = "https://www.sogou.com" + t.attr("href");
             String result = OkHttpUtil.getInstance().getHtml(href, HOST);
             Pattern pt = Pattern.compile("\\(\"([\\s\\S]*?)\"\\)");

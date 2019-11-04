@@ -16,6 +16,11 @@ public class ImageUtil {
     private static final float BLUR_RADIUS = 7.5f;
 
     public static void display(Context context, String url, ImageView view, Transformation transformation) {
+        if (url == null) {
+            Glide.with(context).load(R.drawable.placeholder).into(view);
+            return;
+        }
+
         GlideUrl gu = new GlideUrl(url, new LazyHeaders.Builder().addHeader("Referer", url).build());
         if (transformation == null) {
             Glide.with(context).load(gu)

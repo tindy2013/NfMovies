@@ -32,18 +32,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-            <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-                    android:visibility="invisible"
-                    android:id="@+id/search_progress"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:indeterminate="true"
-                    app:mpb_progressStyle="horizontal"
-                    app:mpb_indeterminateTint="@color/netflixRed"
-                    app:mpb_useIntrinsicPadding="false"
-                    app:mpb_showProgressBackground="false"
-                    style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal.NoPadding"
-                    app:layout_constraintTop_toTopOf="parent"/>
+            <include layout="@layout/progressbar"/>
             <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/result_rv"

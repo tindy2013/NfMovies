@@ -15,18 +15,18 @@ import com.xuvjso.nfmovies.Utils.ImageUtil;
 
 import java.util.List;
 
-public class ChannelAdapter extends BaseAdapter {
+public class ChannelGridViewAdapter extends BaseAdapter {
     private List<Channel> channels;
     private Context context;
     private ChannelClickListener clickListener;
 
-    public ChannelAdapter(Context context, List<Channel> channels, ChannelClickListener channelClickListener) {
+    public ChannelGridViewAdapter(Context context, List<Channel> channels, ChannelClickListener channelClickListener) {
         this.channels = channels;
         this.context = context;
         this.clickListener = channelClickListener;
     }
 
-    public ChannelAdapter(Context context, ChannelClickListener channelClickListener) {
+    public ChannelGridViewAdapter(Context context, ChannelClickListener channelClickListener) {
         this.context = context;
         this.channels = null;
         this.clickListener = channelClickListener;
@@ -57,19 +57,18 @@ public class ChannelAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.channel_item, null);
             viewHolder = new ViewHolder(convertView);
-            viewHolder.channelTitle.setText(channels.get(position).getTitle());
-            ImageUtil.display(context, channels.get(position).getIcon(), viewHolder.channelImg, null);
-            viewHolder.channelImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    clickListener.OnChannelClick(position);
-                }
-            });
-            convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
+        viewHolder.channelTitle.setText(channels.get(position).getTitle());
+        ImageUtil.display(context, channels.get(position).getIcon(), viewHolder.channelImg, null);
+        viewHolder.channelImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickListener.OnChannelClick(position);
+            }
+        });
+        convertView.setTag(viewHolder);
         return convertView;
     }
 

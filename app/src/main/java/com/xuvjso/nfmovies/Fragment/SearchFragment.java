@@ -64,7 +64,7 @@ public class SearchFragment extends BaseFragment {
         searchView = rootView.findViewById(R.id.search_view);
         toolbar = rootView.findViewById(R.id.search_toolbar);
         resultRv = rootView.findViewById(R.id.result_rv);
-        progressBar = rootView.findViewById(R.id.search_progress);
+        progressBar = rootView.findViewById(R.id.progressbar);
         swipe = rootView.findViewById(R.id.search_swipe_refresh);
 
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -145,13 +145,11 @@ public class SearchFragment extends BaseFragment {
             progressBar.setVisibility(View.INVISIBLE);
             if (categories.size() == 0) return;
             if (adapter == null) {
-                Log.d("CategoryFragment", "new adapter");
                 adapter = new CategoryRecyclerViewAdapter(getContext(), categories, SearchFragment.this, null);
                 resultRv.setAdapter(adapter);
                 LinearLayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
                 resultRv.setLayoutManager(manager);
             } else {
-                Log.d("CategoryFragment", "dataSetChanged");
                 adapter.setCategories(categories);
                 adapter.notifyDataSetChanged();
             }

@@ -24,12 +24,12 @@ public class NfMovies implements ISite {
     public static final String HOST = "https://www.nfmovies.com";
     public static final String NAME = "奈菲影视";
     private static NfMovies mInstance;
-    private static final Type type = Type.NFMOVIES;
+    private static final Site SITE = Site.NFMOVIES;
 
 
     @Override
-    public Type getType() {
-        return type;
+    public Site getSite() {
+        return SITE;
     }
 
     @Override
@@ -136,7 +136,7 @@ public class NfMovies implements ISite {
         if (eles.size() == 0) return null;
         for (Element e : eles) {
             Movie m = new Movie();
-            m.setSite(Type.NFMOVIES);
+            m.setSite(Site.NFMOVIES);
             Element pic = e.getElementsByClass("videopic").first();
             m.setUrl(HOST + pic.attr("href"));
             String style = pic.attr("style");
@@ -197,7 +197,7 @@ public class NfMovies implements ISite {
                 String img = e.attr("data-original");
                 String name = e.attr("title");
                 Movie m = new Movie(name, HOST + img, HOST + href);
-                m.setSite(type);
+                m.setSite(SITE);
                 movies.add(m);
             }
             categories.add(new Category(title, movies, HOST + url));

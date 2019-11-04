@@ -4,6 +4,7 @@
     <string name="title_more">更多</string>
     <string name="title_search">搜索</string>
     <string name="title_live">直播</string>
+    <string name="title_liked">喜欢</string>
 
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
@@ -14,5 +15,8 @@
         <a href="https://b.apkgm.top/">团长资源</a>
         <a href="http://ddrk.me/">低端影视</a>
     </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

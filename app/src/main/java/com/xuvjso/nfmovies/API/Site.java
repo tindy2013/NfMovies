@@ -1,5 +1,5 @@
 package com.xuvjso.nfmovies.API;
 
-public enum Type {
+public enum Site {
     NFMOVIES, TUANZHANG, DDRK
 }

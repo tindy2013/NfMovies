@@ -1,6 +1,8 @@
 package com.xuvjso.nfmovies.Activity;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -9,10 +11,7 @@ import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.view.MenuItem;
 import com.xuvjso.nfmovies.BuildConfig;
-import com.xuvjso.nfmovies.Fragment.HomeFragment;
-import com.xuvjso.nfmovies.Fragment.LiveFragment;
-import com.xuvjso.nfmovies.Fragment.MoreFragment;
-import com.xuvjso.nfmovies.Fragment.SearchFragment;
+import com.xuvjso.nfmovies.Fragment.*;
 import com.xuvjso.nfmovies.R;
 import com.xuvjso.nfmovies.Utils.OkHttpUtil;
 import me.yokeyword.fragmentation.*;
@@ -26,7 +25,9 @@ public class MainActivity extends BaseActivity {
     private static final int LIVE_FRAGMENT = 1;
     private static final int SEARCH_FRAGMENT = 2;
     private static final int MORE_FRAGMENT = 3;
-    private static final int FRAGMENT_NUM = 4;
+    private static final int LIKED_FRAGMENT = 4;
+    private static final int FRAGMENT_NUM = 5;
+
     private int HAHAHA;
     private int moreNum;
     private long time;
@@ -48,6 +49,9 @@ public class MainActivity extends BaseActivity {
                     return true;
                 case R.id.navigation_live:
                     showHideFragment(fragments[LIVE_FRAGMENT]);
+                    return true;
+                case R.id.navigation_liked:
+                    showHideFragment(fragments[LIKED_FRAGMENT]);
                     return true;
             }
             return false;
@@ -93,12 +97,14 @@ public class MainActivity extends BaseActivity {
             fragments[SEARCH_FRAGMENT] = SearchFragment.newInstance();
             fragments[MORE_FRAGMENT] = MoreFragment.newInstance();
             fragments[LIVE_FRAGMENT] = LiveFragment.newInstance();
+            fragments[LIKED_FRAGMENT] = LikedFragment.newInstance();
             loadMultipleRootFragment(R.id.main_frame, 0, fragments);
         } else {
             fragments[HOME_FRAGMENT] = findFragment(HomeFragment.class);
             fragments[SEARCH_FRAGMENT] = findFragment(SearchFragment.class);
             fragments[MORE_FRAGMENT] = findFragment(MoreFragment.class);
             fragments[LIVE_FRAGMENT] = findFragment(LiveFragment.class);
+            fragments[LIKED_FRAGMENT] = findFragment(LikedFragment.class);
         }
 
 
@@ -145,16 +151,19 @@ public class MainActivity extends BaseActivity {
             return html;
         }
 
-
-
         @Override
         protected void onPostExecute(String s) {
             try {
                 JSONObject j = new JSONObject(s);
                 int status = j.getInt("status");
                 if (status != 1) finish();
-            } catch (JSONException e) {
+                long version = j.getLong("version");
+                long curVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+                if (curVersion < version)
+                    Toast.makeText(getApplicationContext(), "版本已更新,请到群内下载", Toast.LENGTH_SHORT).show();
+            } catch (JSONException | PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "似乎出现了一点问题", Toast.LENGTH_SHORT).show();
             }
         }
     }

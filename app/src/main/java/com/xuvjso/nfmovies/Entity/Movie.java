@@ -1,26 +1,26 @@
 package com.xuvjso.nfmovies.Entity;
 
-import com.xuvjso.nfmovies.API.Type;
+import com.xuvjso.nfmovies.API.Site;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class Movie {
+public class Movie implements Serializable {
     private String img;
     private String name;
     private String url;
     private String description;
     private String year;
     private String type;
-    private Type site;
-    public Type getSite() {
+    private Site site;
+    public Site getSite() {
         return site;
     }
 
-    public void setSite(Type site) {
+    public void setSite(Site site) {
         this.site = site;
     }
-
 
 
     public Movie() {

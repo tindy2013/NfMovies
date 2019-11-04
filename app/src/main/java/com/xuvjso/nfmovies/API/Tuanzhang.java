@@ -19,7 +19,7 @@ public class Tuanzhang implements ISite {
     private static final String HOST = "https://b.apkgm.top";
     public static final String NAME = "团长资源";
     private static Tuanzhang mInstance;
-    private static final Type type = Type.TUANZHANG;
+    private static final Site SITE = Site.TUANZHANG;
 
     public static synchronized Tuanzhang getInstance() {
         if (mInstance == null) {
@@ -33,8 +33,8 @@ public class Tuanzhang implements ISite {
     }
 
     @Override
-    public Type getType() {
-        return type;
+    public Site getSite() {
+        return SITE;
     }
 
     @Override
@@ -122,7 +122,7 @@ public class Tuanzhang implements ISite {
             String name = e.attr("alt");
             Log.i("TUANZHANG", name + ' ' + img);
             Movie m = new Movie(name, img, href);
-            m.setSite(type);
+            m.setSite(SITE);
             movies.add(m);
         }
         category.setMovies(movies);
@@ -152,7 +152,7 @@ public class Tuanzhang implements ISite {
                 String name = e.attr("alt");
                 Log.i("TUANZHANG", name + ' ' + img);
                 Movie m = new Movie(name, img, href);
-                m.setSite(type);
+                m.setSite(SITE);
                 movies.add(m);
             }
             categories.add(new Category(title, movies, url));

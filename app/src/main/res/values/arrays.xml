@@ -5,11 +5,13 @@
         <item>2</item>
         <item>3</item>
         <item>4</item>
+        <item>5</item>
     </string-array>
     <string-array name="player">
         <item>Manual</item>
         <item>MXPlayer</item>
         <item>MXPlayer Pro</item>
-        <item>NPlayer</item>
+        <item>nPlayer</item>
+        <item>VLC</item>
     </string-array>
 </resources>

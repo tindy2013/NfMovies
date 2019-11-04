@@ -3,8 +3,8 @@ package com.xuvjso.nfmovies.Utils;
 import com.xuvjso.nfmovies.API.*;
 
 public class APIUtil {
-    public static ISite getClient(Type type) {
-        switch (type) {
+    public static ISite getClient(Site site) {
+        switch (site) {
             case NFMOVIES:
                 return NfMovies.getInstance();
             case TUANZHANG:

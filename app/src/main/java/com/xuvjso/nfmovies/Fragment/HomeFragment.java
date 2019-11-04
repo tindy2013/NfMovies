@@ -1,6 +1,7 @@
 package com.xuvjso.nfmovies.Fragment;
 
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.*;
@@ -11,7 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.xuvjso.nfmovies.Adapter.CategoryRecyclerViewAdapter;
+import com.xuvjso.nfmovies.Adapter.MovieRecyclerViewAdapter;
+import com.xuvjso.nfmovies.Contract.LikedContract;
 import com.xuvjso.nfmovies.Entity.Category;
+import com.xuvjso.nfmovies.Entity.Movie;
+import com.xuvjso.nfmovies.Helper.LikedHelper;
 import com.xuvjso.nfmovies.Listener.CategoryMoreClickListener;
 import com.xuvjso.nfmovies.Listener.PopupMenuItemClickListener;
 import com.xuvjso.nfmovies.UI.PopupMenu;
@@ -36,7 +41,6 @@ public class HomeFragment extends BaseFragment implements CategoryMoreClickListe
     private PopupMenu popupMenu;
     private int current;
 
-
     @Override
     public void onSupportInvisible() {
         if (refreshTask != null) refreshTask.cancel(true);
@@ -49,10 +53,14 @@ public class HomeFragment extends BaseFragment implements CategoryMoreClickListe
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
         current = 0;
         initView();
-        show(0);
         return rootView;
     }
 
+    @Override
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
+        show(0);
+    }
 
     private void initView() {
         menus = new ArrayList<>();
@@ -64,8 +72,9 @@ public class HomeFragment extends BaseFragment implements CategoryMoreClickListe
             categories.add(new ArrayList<Category>());
         }
 
-        siteMenu = rootView.findViewById(R.id.site_menu);
-        progressBar = rootView.findViewById(R.id.content_progress);
+        siteMenu = rootView.findViewById(R.id.toolbar_menu);
+        siteMenu.setVisibility(View.VISIBLE);
+        progressBar = rootView.findViewById(R.id.progressbar);
 
         categoryRv = rootView.findViewById(R.id.content_rv);
 

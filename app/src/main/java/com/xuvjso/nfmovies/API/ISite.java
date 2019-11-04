@@ -10,7 +10,7 @@ import java.util.List;
 public interface ISite {
 
     List<Category> getCategories() throws Exception;
-    Type getType();
+    Site getSite();
     Movie getMovieDetail(Movie movie) throws JSONException;
     String getPlayURL(Episode e) throws Exception;
     Category search(String str);

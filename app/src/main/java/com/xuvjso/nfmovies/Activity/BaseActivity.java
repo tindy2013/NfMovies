@@ -15,6 +15,7 @@ public class BaseActivity extends SupportActivity {
     private static final String MXPLAYER_AD = "com.mxtech.videoplayer.ad";
     private static final String MXPLAYER_PRO = "com.mxtech.videoplayer.pro";
     private static final String NPLAYER = "com.newin.nplayer.pro";
+    private static final String VLC = "org.videolan.vlc";
     protected static final int REQUEST_READ_AND_WRITE_PERMISSION = 1;
 
     @Override
@@ -45,6 +46,9 @@ public class BaseActivity extends SupportActivity {
             case 4:
                 play(url, NPLAYER);
                 break;
+            case 5:
+                play(url, VLC);
+
         }
     }
 
