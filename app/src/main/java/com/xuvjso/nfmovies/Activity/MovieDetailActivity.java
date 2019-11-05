@@ -1,14 +1,15 @@
 package com.xuvjso.nfmovies.Activity;
 
+import android.app.AlertDialog;
 import android.content.*;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.WindowManager;
+import android.widget.*;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.tabs.TabLayout;
@@ -20,22 +21,31 @@ import com.xuvjso.nfmovies.Helper.LikedHelper;
 import com.xuvjso.nfmovies.UI.AutoHeightViewPager;
 import com.xuvjso.nfmovies.Entity.Episode;
 import com.xuvjso.nfmovies.Fragment.EpisodesFragment;
-import com.xuvjso.nfmovies.Listener.EpisodeCopyClickListener;
-import com.xuvjso.nfmovies.Listener.EpisodePlayClickListener;
-import com.xuvjso.nfmovies.Listener.UploadClickListener;
 import com.xuvjso.nfmovies.Entity.Movie;
 import com.xuvjso.nfmovies.R;
 import com.xuvjso.nfmovies.Utils.*;
-import com.xuvjso.nfmovies.Adapter.EpisodeRecyclerViewAdapter;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
+import org.fourthline.cling.android.AndroidUpnpService;
+import org.fourthline.cling.android.AndroidUpnpServiceImpl;
+import org.fourthline.cling.controlpoint.ControlPoint;
+import org.fourthline.cling.model.action.ActionInvocation;
+import org.fourthline.cling.model.message.UpnpResponse;
+import org.fourthline.cling.model.meta.Device;
+import org.fourthline.cling.model.meta.LocalDevice;
+import org.fourthline.cling.model.meta.RemoteDevice;
+import org.fourthline.cling.model.meta.Service;
+import org.fourthline.cling.model.types.UDAServiceType;
+import org.fourthline.cling.registry.DefaultRegistryListener;
+import org.fourthline.cling.registry.Registry;
+import com.xuvjso.nfmovies.Utils.DLNAUtil.DeviceDisplay;
+import org.fourthline.cling.support.avtransport.callback.SetAVTransportURI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MovieDetailActivity extends BaseActivity implements EpisodePlayClickListener, EpisodeCopyClickListener,
-        EpisodesFragment.OnFragmentInteractionListener, UploadClickListener {
+public class MovieDetailActivity extends BaseActivity implements EpisodesFragment.OnFragmentInteractionListener{
     private ImageView movieImg;
     private ImageView bg;
     private TextView movieInfo;
@@ -52,18 +62,48 @@ public class MovieDetailActivity extends BaseActivity implements EpisodePlayClic
     private ShineButton likeButton;
     private SQLiteDatabase db;
     private LikedHelper dbHelper;
+    private String castUrl;
+    private String castName;
+    private AlertDialog dialog;
+    private ListView listView;
 
     private int player;
     public enum TaskType {
-        COPY, PLAY
+        COPY, PLAY, CAST
     }
 
+    private ArrayAdapter<DeviceDisplay> listAdapter;
+    private BrowseRegistryListener registryListener = new BrowseRegistryListener();
+    private AndroidUpnpService upnpService;
+    private ServiceConnection serviceConnection = new ServiceConnection() {
 
-    EpisodeRecyclerViewAdapter  adapter;
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            upnpService = (AndroidUpnpService) service;
+            // Clear the list
+            listAdapter.clear();
+            // Get ready for future device advertisements
+            upnpService.getRegistry().addListener(registryListener);
+
+            // Now add all devices to the list we already know about
+            for (Device device : upnpService.getRegistry().getDevices()) {
+                registryListener.deviceAdded(device);
+            }
+
+            // Search asynchronously for all devices, they will respond soon
+            upnpService.getControlPoint().search();
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            upnpService = null;
+        }
+    };
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_movie_detail);
 
         movie = (Movie) getIntent().getSerializableExtra("movie");
@@ -72,6 +112,34 @@ public class MovieDetailActivity extends BaseActivity implements EpisodePlayClic
         dbHelper = new LikedHelper(this);
         db = dbHelper.getWritableDatabase();
         initView();
+
+        listView = new ListView(this);
+        listAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1);
+        listView.setAdapter(listAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                DeviceDisplay deviceDisplay = (DeviceDisplay) listAdapter.getItem(position);
+                Device device = deviceDisplay.getDevice();
+                Service service = device.findService(new UDAServiceType("AVTransport"));
+                String metadata = DLNAUtil.pushMediaToRender(castUrl, "id",
+                        movie.getName() + ' ' + castName, "0");
+                ControlPoint controlPoint = upnpService.getControlPoint();
+                controlPoint.execute(new SetAVTransportURI(service, castUrl, metadata) {
+                    @Override
+                    public void failure(ActionInvocation invocation, UpnpResponse operation, String defaultMsg) {
+                        Log.e("CAST", "play error");
+                    }
+                });
+            }
+        });
+
+        getApplicationContext().bindService(
+                new Intent(this, AndroidUpnpServiceImpl.class),
+                serviceConnection,
+                Context.BIND_AUTO_CREATE
+        );
+
     }
 
 
@@ -136,6 +204,41 @@ public class MovieDetailActivity extends BaseActivity implements EpisodePlayClic
 
     }
 
+    @Override
+    public void onFragmentInteraction(Episode e, TaskType t) {
+        if (t == TaskType.PLAY) onPlayClick(e);
+        if (t == TaskType.COPY) onCopyClick(e);
+        if (t == TaskType.CAST) onCastClick(e);
+    }
+
+    private void showCastDialog() {
+        if (dialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(true);
+            builder.setView(listView);
+            builder.setTitle("请选择播放设备");
+            builder.setIcon(R.drawable.ic_airplay_white_24dp);
+            dialog = builder.create();
+        }
+
+        dialog.show();
+    }
+
+    public void onCastClick(Episode e) {
+        String url = e.getUrl();
+        Task t = new Task(TaskType.CAST, e);
+        if (havePlayUrl(url)) {
+            castUrl = playUrlMap.get(url);
+            castName = e.getName();
+            showCastDialog();
+            return;
+        } else if(!haveTask()) {
+            parseTask = new ParseTask();
+            parseTask.execute(t);
+        }
+    }
+
+
     public void onCopyClick(Episode e) {
         String url = e.getUrl();
         Task t = new Task(TaskType.COPY, e);
@@ -146,7 +249,6 @@ public class MovieDetailActivity extends BaseActivity implements EpisodePlayClic
         }
     }
 
-    @Override
     public void onPlayClick(Episode e) {
         String url = e.getUrl();
         Task t = new Task(TaskType.PLAY, e);
@@ -170,17 +272,7 @@ public class MovieDetailActivity extends BaseActivity implements EpisodePlayClic
         return false;
     }
 
-    @Override
-    public void onFragmentInteraction(Episode e, TaskType t) {
-        if (t == TaskType.PLAY) onPlayClick(e);
-        if (t == TaskType.COPY) onCopyClick(e);
-    }
 
-    @Override
-    public boolean upload(String str) {
-        Toast.makeText(getApplicationContext(), "开发中...", Toast.LENGTH_SHORT).show();
-        return false;
-    }
 
     private class Task {
         public TaskType type;
@@ -207,7 +299,7 @@ public class MovieDetailActivity extends BaseActivity implements EpisodePlayClic
 
             task.playUrl = s;
             if (task.type == TaskType.COPY) return task;
-
+            if (task.type == TaskType.CAST) return task;
             if (ep.getCaption() != null) {
                 try {
                     publishProgress("正在下载字幕");
@@ -246,10 +338,18 @@ public class MovieDetailActivity extends BaseActivity implements EpisodePlayClic
         protected void onPostExecute(Task t) {
             progressBar.setVisibility(ProgressBar.INVISIBLE);
             playUrlMap.put(t.episode.getUrl(), t.playUrl);
-            if (t.type == TaskType.PLAY) {
-                play(t.playUrl, player);
-            } else if (t.type == TaskType.COPY) {
-                copy(t.playUrl);
+            switch (t.type) {
+                case PLAY:
+                    play(t.playUrl, player);
+                    break;
+                case COPY:
+                    copy(t.playUrl);
+                    break;
+                case CAST:
+                    castUrl = t.playUrl;
+                    castName = t.episode.getName();
+                    showCastDialog();
+                    break;
             }
         }
     }
@@ -320,5 +420,81 @@ public class MovieDetailActivity extends BaseActivity implements EpisodePlayClic
     protected void onDestroy() {
         dbHelper.close();
         super.onDestroy();
+        if (upnpService != null) {
+            upnpService.getRegistry().removeListener(registryListener);
+        }
+        // This will stop the UPnP service if nobody else is bound to it
+        getApplicationContext().unbindService(serviceConnection);
     }
+
+
+    protected class BrowseRegistryListener extends DefaultRegistryListener {
+
+        /* Discovery performance optimization for very slow Android devices! */
+        @Override
+        public void remoteDeviceDiscoveryStarted(Registry registry, RemoteDevice device) {
+            deviceAdded(device);
+        }
+
+        @Override
+        public void remoteDeviceDiscoveryFailed(Registry registry, final RemoteDevice device, final Exception ex) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(
+                            MovieDetailActivity.this,
+                            "Discovery failed of '" + device.getDisplayString() + "': "
+                                    + (ex != null ? ex.toString() : "Couldn't retrieve device/service descriptors"),
+                            Toast.LENGTH_LONG
+                    ).show();
+                }
+            });
+            deviceRemoved(device);
+        }
+        /* End of optimization, you can remove the whole block if your Android handset is fast (>= 600 Mhz) */
+
+        @Override
+        public void remoteDeviceAdded(Registry registry, RemoteDevice device) {
+            deviceAdded(device);
+        }
+
+        @Override
+        public void remoteDeviceRemoved(Registry registry, RemoteDevice device) {
+            deviceRemoved(device);
+        }
+
+        @Override
+        public void localDeviceAdded(Registry registry, LocalDevice device) {
+            deviceAdded(device);
+        }
+
+        @Override
+        public void localDeviceRemoved(Registry registry, LocalDevice device) {
+            deviceRemoved(device);
+        }
+
+        public void deviceAdded(final Device device) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    DLNAUtil.DeviceDisplay d = new DLNAUtil.DeviceDisplay(device);
+                    int position = listAdapter.getPosition(d);
+                    if (position >= 0) {
+                        // Device already in the list, re-set new value at same position
+                        listAdapter.remove(d);
+                        listAdapter.insert(d, position);
+                    } else {
+                        listAdapter.add(d);
+                    }
+                }
+            });
+        }
+
+        public void deviceRemoved(final Device device) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    listAdapter.remove(new DLNAUtil.DeviceDisplay(device));
+                }
+            });
+        }
+    }
+
 }

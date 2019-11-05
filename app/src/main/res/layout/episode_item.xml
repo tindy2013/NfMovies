@@ -32,8 +32,8 @@
             android:scaleType="center"
             android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:id="@+id/episode_upload" android:layout_weight="1"
-            app:srcCompat="@drawable/ic_cloud_upload_white_24dp"/>
+            android:id="@+id/episode_cast" android:layout_weight="1"
+            app:srcCompat="@drawable/ic_airplay_white_24dp"/>
     <androidx.appcompat.widget.AppCompatImageView
             android:scaleType="center"
             android:layout_width="60dp"

@@ -13,11 +13,11 @@
         <item name="textColorAlertDialogListItem">@color/colorAccent</item>
         <item name="android:dialogTheme">@style/AppTheme.Dialog</item>
         <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="AppTheme.Dialog" parent="Theme.MaterialComponents.Dialog">
-        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="android:background">@color/colorPrimary</item>
         <item name="colorPrimaryDark">#8DB2D3</item>
         <item name="colorAccent">@color/colorUnchecked</item>

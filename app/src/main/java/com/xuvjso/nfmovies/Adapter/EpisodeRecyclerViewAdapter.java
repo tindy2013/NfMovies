@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.xuvjso.nfmovies.Entity.Episode;
+import com.xuvjso.nfmovies.Listener.EpisodeCastClickListener;
 import com.xuvjso.nfmovies.Listener.EpisodeCopyClickListener;
 import com.xuvjso.nfmovies.Listener.EpisodePlayClickListener;
 import com.xuvjso.nfmovies.R;
@@ -20,14 +21,17 @@ public class EpisodeRecyclerViewAdapter extends RecyclerView.Adapter<EpisodeRecy
     private Context context;
     private EpisodePlayClickListener playListener;
     private EpisodeCopyClickListener copyListener;
+    private EpisodeCastClickListener castListener;
 
     public EpisodeRecyclerViewAdapter(Context context, List<Episode> episodes,
                                       EpisodePlayClickListener playListener,
-                                      EpisodeCopyClickListener copyListener) {
+                                      EpisodeCopyClickListener copyListener,
+                                      EpisodeCastClickListener castListener) {
         this.episodes = episodes;
         this.context = context;
         this.playListener = playListener;
         this.copyListener = copyListener;
+        this.castListener = castListener;
     }
 
     public void setEpisodes(List<Episode> episodes) {
@@ -56,14 +60,13 @@ public class EpisodeRecyclerViewAdapter extends RecyclerView.Adapter<EpisodeRecy
         private TextView name;
         private ImageView play;
         private ImageView copy;
-        private ImageView upload;
+        private ImageView cast;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.episode_name);
             play = itemView.findViewById(R.id.episode_play);
             copy = itemView.findViewById(R.id.episode_copy);
-            upload = itemView.findViewById(R.id.episode_upload);
-            upload.setVisibility(View.GONE);
+            cast = itemView.findViewById(R.id.episode_cast);
             play.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -77,6 +80,14 @@ public class EpisodeRecyclerViewAdapter extends RecyclerView.Adapter<EpisodeRecy
                     copyListener.onCopyClick(episodes.get(getAdapterPosition()));
                 }
             });
+
+            cast.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    castListener.OnCastClick(episodes.get(getAdapterPosition()));
+                }
+            });
+
         }
     }
 }

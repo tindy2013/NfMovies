@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.xuvjso.nfmovies.Activity.MovieDetailActivity;
 import com.xuvjso.nfmovies.Adapter.EpisodeRecyclerViewAdapter;
 import com.xuvjso.nfmovies.Entity.Episode;
+import com.xuvjso.nfmovies.Entity.Movie;
+import com.xuvjso.nfmovies.Listener.EpisodeCastClickListener;
 import com.xuvjso.nfmovies.Listener.EpisodeCopyClickListener;
 import com.xuvjso.nfmovies.Listener.EpisodePlayClickListener;
 import com.xuvjso.nfmovies.R;
@@ -22,7 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EpisodesFragment extends SupportFragment implements EpisodeCopyClickListener, EpisodePlayClickListener {
+public class EpisodesFragment extends SupportFragment implements EpisodeCopyClickListener,
+        EpisodePlayClickListener, EpisodeCastClickListener {
 
     private RecyclerView mEpisodeRv;
     private List<Episode> mData = new ArrayList<>();
@@ -36,7 +39,6 @@ public class EpisodesFragment extends SupportFragment implements EpisodeCopyClic
         return mData;
     }
 
-    // TODO: Rename and change types and number of parameters
     public static EpisodesFragment newInstance(List<Episode> e) {
         EpisodesFragment fragment = new EpisodesFragment();
         Bundle args = new Bundle();
@@ -60,7 +62,7 @@ public class EpisodesFragment extends SupportFragment implements EpisodeCopyClic
         View view = inflater.inflate(R.layout.fragment_episodes, container, false);
         mEpisodeRv = view.findViewById(R.id.episode_recyclerview);
         EpisodeRecyclerViewAdapter episodeRecyclerViewAdapter = new EpisodeRecyclerViewAdapter(getContext(),
-                mData, this, this);
+                mData, this, this, this);
         mEpisodeRv.setAdapter(episodeRecyclerViewAdapter);
         mEpisodeRv.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false));
         return view;
@@ -79,6 +81,11 @@ public class EpisodesFragment extends SupportFragment implements EpisodeCopyClic
     }
 
     @Override
+    public void OnCastClick(Episode e) {
+        mListener.onFragmentInteraction(e, MovieDetailActivity.TaskType.CAST);
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (activity instanceof OnFragmentInteractionListener) {
@@ -88,6 +95,7 @@ public class EpisodesFragment extends SupportFragment implements EpisodeCopyClic
                     + " must implement OnFragmentInteractionListener");
         }
     }
+
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Episode e, MovieDetailActivity.TaskType taskType);
