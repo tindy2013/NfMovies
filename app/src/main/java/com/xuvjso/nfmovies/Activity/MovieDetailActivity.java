@@ -172,10 +172,10 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
             public void onClick(View v) {
                 if (likeButton.isChecked()) {
                     dbHelper.add(db, movie);
-                    Toast.makeText(getApplicationContext(), "收藏成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.like_success, Toast.LENGTH_SHORT).show();
                 } else {
                     dbHelper.delete(db, movie);
-                    Toast.makeText(getApplicationContext(), "取消收藏", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.dislike_success, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -191,7 +191,7 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
             public void onClick(View v) {
                 EpisodesFragment f = (EpisodesFragment) episodesPageAdapter.getItem(viewPager.getCurrentItem());
                 Episode e = f.getmData().get(0);
-                Toast.makeText(getApplicationContext(), "准备播放"+e.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.ready_to_play + e.getName(), Toast.LENGTH_SHORT).show();
                 onPlayClick(e);
             }
         });
@@ -302,7 +302,7 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
             if (task.type == TaskType.CAST) return task;
             if (ep.getCaption() != null) {
                 try {
-                    publishProgress("正在下载字幕");
+                    publishProgress(getString(R.string.downloading_sub));
                     String html = OkHttpUtil.getInstance().getHtml(ep.getCaption(), "http://ddrk.me");
                     String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Subtitles/";
                     String[] str = ep.getCaption().split("/");
@@ -312,11 +312,11 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
                     html = html.replaceAll("NOTE.*", "");
                     html = html.replaceAll("&lrm;", "");
                     html = html.replaceAll("<.*?>", "");
-                    if (FileUtil.write(path, filename, html)) publishProgress("下载字幕成功");
-                    else publishProgress("下载字幕失败");
+                    if (FileUtil.write(path, filename, html)) publishProgress(getString(R.string.download_sub_success));
+                    else publishProgress(getString(R.string.download_sub_failed));
                 } catch (Exception e) {
                     e.printStackTrace();
-                    publishProgress("下载字幕失败");
+                    publishProgress(getString(R.string.download_sub_failed));
                 }
             }
 
@@ -358,7 +358,7 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
         ClipboardManager clipManager = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText(movie.getName(), url);
         clipManager.setPrimaryClip(clip);
-        Toast.makeText(getApplicationContext(), "复制播放链接成功", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), R.string.copy_link_success, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -384,7 +384,7 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
         protected void onPostExecute(Object o) {
             progressBar.setVisibility(ProgressBar.INVISIBLE);
             if (o == null) {
-                Toast.makeText(getApplicationContext(), "加载失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.load_failed, Toast.LENGTH_SHORT).show();
                 return;
             }
             movie = (Movie) o;
@@ -394,7 +394,7 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
             movieInfo.setText(t.toString());
             Map<String, List<Episode>> episodes = movie.getEpisodes();
             if (episodes == null) {
-                Toast.makeText(getApplicationContext(), "加载失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.load_failed, Toast.LENGTH_SHORT).show();
                 return;
             }
             List<Fragment> fragments = new ArrayList<>();

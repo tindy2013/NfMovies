@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+
+import com.xuvjso.nfmovies.R;
+
 import me.yokeyword.fragmentation.SupportActivity;
 
 public class BaseActivity extends SupportActivity {
@@ -35,7 +38,7 @@ public class BaseActivity extends SupportActivity {
             case 1:
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.parse(url), "video/*");
-                startActivity(intent.createChooser(intent, "请选择播放器"));
+                startActivity(intent.createChooser(intent, getString(R.string.select_player)));
                 break;
             case 2:
                 play(url, MXPLAYER_AD);
@@ -54,7 +57,7 @@ public class BaseActivity extends SupportActivity {
 
     private void play(String url, String packageName) {
         if (url == null || !url.contains("http")) {
-            Toast.makeText(getApplicationContext(), "加载播放链接失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.load_play_url_error, Toast.LENGTH_SHORT).show();
             return;
         }
         PackageInfo p = null;
@@ -65,7 +68,7 @@ public class BaseActivity extends SupportActivity {
             p = null;
         }
         if (p == null) {
-            Toast.makeText(getApplicationContext(),"未找到" + packageName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),R.string.not_found + packageName, Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setPackage(packageName);

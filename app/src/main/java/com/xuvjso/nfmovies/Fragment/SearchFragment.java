@@ -91,7 +91,7 @@ public class SearchFragment extends BaseFragment {
             public boolean onQueryTextSubmit(String query) {
                 if (checkStatus()) {
                     searchView.onActionViewCollapsed();
-                    Toast.makeText(getContext(), "正在搜索" + query, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.searching + query, Toast.LENGTH_SHORT).show();
                     str = query;
                     searchTask = new SearchTask();
                     searchTask.execute(query);

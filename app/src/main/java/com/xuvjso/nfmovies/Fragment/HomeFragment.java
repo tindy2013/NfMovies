@@ -64,9 +64,9 @@ public class HomeFragment extends BaseFragment implements CategoryMoreClickListe
 
     private void initView() {
         menus = new ArrayList<>();
-        menus.add("奈菲影视");
-        menus.add("团长资源");
-        menus.add("低端影视");
+        menus.add(getString(R.string.nfmovies));
+        menus.add(getString(R.string.apkgm));
+        menus.add(getString(R.string.ddrk));
         categories = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             categories.add(new ArrayList<Category>());
@@ -177,7 +177,7 @@ public class HomeFragment extends BaseFragment implements CategoryMoreClickListe
         protected void onPostExecute(TaskType taskType) {
             progressBar.setVisibility(View.INVISIBLE);
             if (taskType.categories == null) {
-                Toast.makeText(getContext(), "加载失败...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.load_failed, Toast.LENGTH_SHORT).show();
                 return;
             }
             categories.set(taskType.position, taskType.categories) ;
@@ -223,7 +223,7 @@ public class HomeFragment extends BaseFragment implements CategoryMoreClickListe
     public boolean onBackPressedSupport() {
         if (refreshTask != null && refreshTask.getStatus() != AsyncTask.Status.FINISHED) {
             refreshTask.cancel(true);
-            Toast.makeText(getContext(), "正在取消加载...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.load_cancelling, Toast.LENGTH_SHORT).show();
             return true;
         }
 

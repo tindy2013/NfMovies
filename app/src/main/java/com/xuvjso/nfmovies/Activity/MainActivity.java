@@ -121,7 +121,7 @@ public class MainActivity extends BaseActivity {
     public void onBackPressedSupport() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - exitTime > 1500) {
-            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.press_again_to_exit, Toast.LENGTH_SHORT).show();
             exitTime = currentTime;
         } else {
             finish();
@@ -160,10 +160,10 @@ public class MainActivity extends BaseActivity {
                 long version = j.getLong("version");
                 long curVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
                 if (curVersion < version)
-                    Toast.makeText(getApplicationContext(), "版本已更新,请到群内下载", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.update, Toast.LENGTH_SHORT).show();
             } catch (JSONException | PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "似乎出现了一点问题", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
             }
         }
     }

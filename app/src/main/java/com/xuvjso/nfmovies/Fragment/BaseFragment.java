@@ -12,6 +12,8 @@ import androidx.preference.PreferenceManager;
 import com.xuvjso.nfmovies.Activity.MovieDetailActivity;
 import com.xuvjso.nfmovies.Listener.MovieItemClickListener;
 import com.xuvjso.nfmovies.Entity.Movie;
+import com.xuvjso.nfmovies.R;
+
 import me.yokeyword.fragmentation.SupportFragment;
 
 public class BaseFragment extends SupportFragment implements MovieItemClickListener {
@@ -24,7 +26,7 @@ public class BaseFragment extends SupportFragment implements MovieItemClickListe
             case 1:
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.parse(url), "video/*");
-                startActivity(intent.createChooser(intent, "请选择播放器"));
+                startActivity(intent.createChooser(intent, getString(R.string.select_player)));
                 break;
             case 2:
                 play(url, MXPLAYER_AD);
@@ -40,7 +42,7 @@ public class BaseFragment extends SupportFragment implements MovieItemClickListe
 
     private void play(String url, String packageName) {
         if (url == null || !url.contains("http")) {
-            Toast.makeText(getContext(), "加载播放链接失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.load_play_url_error, Toast.LENGTH_SHORT).show();
             return;
         }
         PackageInfo p = null;
@@ -51,7 +53,7 @@ public class BaseFragment extends SupportFragment implements MovieItemClickListe
             p = null;
         }
         if (p == null) {
-            Toast.makeText(getContext(),"未找到" + packageName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),R.string.not_found + packageName, Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setPackage(packageName);
