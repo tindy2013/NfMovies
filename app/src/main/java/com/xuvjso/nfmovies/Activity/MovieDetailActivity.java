@@ -18,6 +18,7 @@ import com.sackcentury.shinebuttonlib.ShineButton;
 import com.xuvjso.nfmovies.API.ISite;
 import com.xuvjso.nfmovies.Adapter.EpisodesPageAdapter;
 import com.xuvjso.nfmovies.Helper.LikedHelper;
+import com.xuvjso.nfmovies.NFMoviesApplication;
 import com.xuvjso.nfmovies.UI.AutoHeightViewPager;
 import com.xuvjso.nfmovies.Entity.Episode;
 import com.xuvjso.nfmovies.Fragment.EpisodesFragment;
@@ -25,6 +26,7 @@ import com.xuvjso.nfmovies.Entity.Movie;
 import com.xuvjso.nfmovies.R;
 import com.xuvjso.nfmovies.Utils.*;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
+import okhttp3.Response;
 import org.fourthline.cling.android.AndroidUpnpService;
 import org.fourthline.cling.android.AndroidUpnpServiceImpl;
 import org.fourthline.cling.controlpoint.ControlPoint;
@@ -58,6 +60,7 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
     private ParseTask parseTask;
     private DetailTask detailTask;
     private Map<String, String> playUrlMap;
+    private Map<String, String> captionMap;
     private EpisodesPageAdapter episodesPageAdapter;
     private ShineButton likeButton;
     private SQLiteDatabase db;
@@ -65,7 +68,7 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
     private String castUrl;
     private String castName;
     private AlertDialog dialog;
-    private ListView listView;
+    private ListView deviceListView;
 
     private int player;
     public enum TaskType {
@@ -105,41 +108,25 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_movie_detail);
-
+        NFMoviesApplication app = (NFMoviesApplication) getApplication();
         movie = (Movie) getIntent().getSerializableExtra("movie");
-        player = getIntent().getIntExtra("player", 1);
         api = APIUtil.getClient(movie.getSite());
         dbHelper = new LikedHelper(this);
         db = dbHelper.getWritableDatabase();
+
         initView();
+        loadContent();
+        bindService();
+    }
 
-        listView = new ListView(this);
-        listAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1);
-        listView.setAdapter(listAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                DeviceDisplay deviceDisplay = (DeviceDisplay) listAdapter.getItem(position);
-                Device device = deviceDisplay.getDevice();
-                Service service = device.findService(new UDAServiceType("AVTransport"));
-                String metadata = DLNAUtil.pushMediaToRender(castUrl, "id",
-                        movie.getName() + ' ' + castName, "0");
-                ControlPoint controlPoint = upnpService.getControlPoint();
-                controlPoint.execute(new SetAVTransportURI(service, castUrl, metadata) {
-                    @Override
-                    public void failure(ActionInvocation invocation, UpnpResponse operation, String defaultMsg) {
-                        Log.e("CAST", "play error");
-                    }
-                });
-            }
-        });
 
+
+    private void bindService() {
         getApplicationContext().bindService(
                 new Intent(this, AndroidUpnpServiceImpl.class),
                 serviceConnection,
                 Context.BIND_AUTO_CREATE
         );
-
     }
 
 
@@ -157,15 +144,10 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
         movieInfo = findViewById(R.id.detail_info);
         progressBar = findViewById(R.id.detail_progress);
         playUrlMap = new HashMap<String, String>();
+        captionMap = new HashMap<String, String>();
         viewPager = findViewById(R.id.origin_view_pager);
         likeButton = findViewById(R.id.detail_like_button);
 
-
-        if (dbHelper.query(db, movie) != null) {
-            likeButton.setChecked(true);
-        } else {
-            likeButton.setChecked(false);
-        }
 
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,18 +173,60 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
             public void onClick(View v) {
                 EpisodesFragment f = (EpisodesFragment) episodesPageAdapter.getItem(viewPager.getCurrentItem());
                 Episode e = f.getmData().get(0);
-                Toast.makeText(getApplicationContext(), R.string.ready_to_play + e.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.ready_to_play) + e.getName(), Toast.LENGTH_SHORT).show();
                 onPlayClick(e);
             }
         });
 
+        deviceListView = new ListView(this);
+        listAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1);
+        deviceListView.setAdapter(listAdapter);
+        deviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                DeviceDisplay deviceDisplay = (DeviceDisplay) listAdapter.getItem(position);
+                Device device = deviceDisplay.getDevice();
+                Service service = device.findService(new UDAServiceType("AVTransport"));
+                String metadata = DLNAUtil.pushMediaToRender(castUrl, "id",
+                        movie.getName() + ' ' + castName, "0");
+                ControlPoint controlPoint = upnpService.getControlPoint();
+                controlPoint.execute(new SetAVTransportURI(service, castUrl, metadata) {
+                    @Override
+                    public void failure(ActionInvocation invocation, UpnpResponse operation, String defaultMsg) {
+                        Log.e("CAST", "play error");
+                    }
+                });
+            }
+        });
+
+
+    }
+
+    private void loadContent() {
         if (!haveTask()) {
             detailTask = new DetailTask();
             detailTask.execute();
         }
-
-
+        new QueryLikedStatusTask().execute();
     }
+
+    private class QueryLikedStatusTask extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            return dbHelper.query(db, movie);
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            if (o == null) {
+                likeButton.setChecked(false);
+            } else {
+                likeButton.setChecked(true);
+            }
+        }
+    }
+
 
     @Override
     public void onFragmentInteraction(Episode e, TaskType t) {
@@ -215,19 +239,18 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
         if (dialog == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setCancelable(true);
-            builder.setView(listView);
-            builder.setTitle("请选择播放设备");
+            builder.setView(deviceListView);
+            builder.setTitle(R.string.choose_your_device);
             builder.setIcon(R.drawable.ic_airplay_white_24dp);
             dialog = builder.create();
         }
-
         dialog.show();
     }
 
-    public void onCastClick(Episode e) {
+    private void onCastClick(Episode e) {
         String url = e.getUrl();
         Task t = new Task(TaskType.CAST, e);
-        if (havePlayUrl(url)) {
+        if (haveUrl(playUrlMap, url)) {
             castUrl = playUrlMap.get(url);
             castName = e.getName();
             showCastDialog();
@@ -239,30 +262,35 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
     }
 
 
-    public void onCopyClick(Episode e) {
+    private void onCopyClick(Episode e) {
         String url = e.getUrl();
         Task t = new Task(TaskType.COPY, e);
-        if (havePlayUrl(url)) copy(playUrlMap.get(url));
+        if (haveUrl(playUrlMap, url)) copy(playUrlMap.get(url));
         else if (!haveTask()) {
             parseTask = new ParseTask();
             parseTask.execute(t);
         }
     }
 
-    public void onPlayClick(Episode e) {
+    private void onPlayClick(Episode e) {
         String url = e.getUrl();
         Task t = new Task(TaskType.PLAY, e);
-        if (havePlayUrl(url)) play(playUrlMap.get(url), player);
+        String pUrl = null, cUrl = null;
+        if (haveUrl(playUrlMap, url)) {
+            pUrl = playUrlMap.get(url);
+            if (haveUrl(captionMap, url)) cUrl = captionMap.get(url);
+            play(pUrl, cUrl);
+        }
         else if (!haveTask()) {
             parseTask = new ParseTask();
             parseTask.execute(t);
         }
     }
 
-
-    private boolean havePlayUrl(String url) {
-        if (playUrlMap.get(url) == null) return false;
-        else return true;
+    private boolean haveUrl(Map<String, String> map, String key) {
+        if (!map.containsKey(key)) return false;
+        if (map.get(key) == null) return false;
+        return true;
     }
 
     private boolean haveTask() {
@@ -278,10 +306,13 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
         public TaskType type;
         public Episode episode;
         public String playUrl;
+        public String caption;
 
         public Task(TaskType type, Episode e) {
             this.type = type;
             this.episode = e;
+            this.caption = null;
+            this.playUrl = null;
         }
     }
 
@@ -296,30 +327,30 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
+            if (s == null) return task;
             task.playUrl = s;
             if (task.type == TaskType.COPY) return task;
             if (task.type == TaskType.CAST) return task;
             if (ep.getCaption() != null) {
                 try {
-                    publishProgress(getString(R.string.downloading_sub));
-                    String html = OkHttpUtil.getInstance().getHtml(ep.getCaption(), "http://ddrk.me");
+
+                    Response response = OkHttpUtil.getInstance().get(ep.getCaption(), "http://ddrk.me");
+                    if (response.code() == 404) return task;
+                    String html = response.body().string();
                     String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Subtitles/";
                     String[] str = ep.getCaption().split("/");
                     String filename = str[str.length - 1];
-                    filename = filename.replace("vtt", "srt");
-                    html = html.replace("WEBVTT", "");
                     html = html.replaceAll("NOTE.*", "");
-                    html = html.replaceAll("&lrm;", "");
-                    html = html.replaceAll("<.*?>", "");
-                    if (FileUtil.write(path, filename, html)) publishProgress(getString(R.string.download_sub_success));
+                    if (FileUtil.write(path, filename, html)) {
+                        task.caption = path + filename;
+                        publishProgress(getString(R.string.download_sub_success));
+                    }
                     else publishProgress(getString(R.string.download_sub_failed));
                 } catch (Exception e) {
                     e.printStackTrace();
                     publishProgress(getString(R.string.download_sub_failed));
                 }
             }
-
             return task;
         }
 
@@ -337,10 +368,16 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
         @Override
         protected void onPostExecute(Task t) {
             progressBar.setVisibility(ProgressBar.INVISIBLE);
-            playUrlMap.put(t.episode.getUrl(), t.playUrl);
+            if (t.playUrl != null) {
+                playUrlMap.put(t.episode.getUrl(), t.playUrl);
+                if (t.caption != null) captionMap.put(t.episode.getUrl(), t.caption);
+            } else {
+                Toast.makeText(getApplicationContext(),R.string.load_play_url_error, Toast.LENGTH_SHORT).show();
+                return;
+            }
             switch (t.type) {
                 case PLAY:
-                    play(t.playUrl, player);
+                    play(t.playUrl, t.caption);
                     break;
                 case COPY:
                     copy(t.playUrl);
@@ -360,9 +397,6 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
         clipManager.setPrimaryClip(clip);
         Toast.makeText(getApplicationContext(), R.string.copy_link_success, Toast.LENGTH_SHORT).show();
     }
-
-
-
 
     private class DetailTask extends AsyncTask {
         @Override
@@ -419,12 +453,11 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
     @Override
     protected void onDestroy() {
         dbHelper.close();
-        super.onDestroy();
         if (upnpService != null) {
             upnpService.getRegistry().removeListener(registryListener);
         }
-        // This will stop the UPnP service if nobody else is bound to it
         getApplicationContext().unbindService(serviceConnection);
+        super.onDestroy();
     }
 
 

@@ -10,8 +10,8 @@ android {
         applicationId "com.xuvjso.nfmovies"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 3
-        versionName "1.2.0 beta"
+        versionCode 5
+        versionName "1.4.0 beta"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -53,5 +53,7 @@ dependencies {
     implementation 'org.eclipse.jetty:jetty-client:8.1.12.v20130726'
     implementation 'org.fourthline.cling:cling-support:2.1.1'
     implementation 'org.fourthline.cling:cling-core:2.1.1'
-
+    implementation 'com.google.android.exoplayer:exoplayer:2.10.6'
+    implementation  'com.umeng.umsdk:analytics:8.0.0'
+    implementation  'com.umeng.umsdk:common:2.0.0'
 }

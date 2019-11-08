@@ -8,17 +8,26 @@
             app:title="播放器设置"
             app:summary="%s"
             app:entries="@array/player"
-            app:defaultValue="1"
+            app:defaultValue="0"
             app:entryValues="@array/player_values"/>
     <Preference
             app:icon="@drawable/ic_info_white_24dp"
             app:key="about"
             app:title="关于本软件"
             app:summary="About"/>
+    <Preference
+            app:icon="@drawable/ic_delete_white_24dp"
+            app:key="clear"
+            app:title="清理缓存"
+            app:summary="Clear Cache"/>
     <Preference android:title="联系我们"
                 app:summary="Contact us"
                 app:icon="@drawable/ic_telegram_white_24dp">
         <intent android:action="android.intent.action.VIEW"
                 android:data="https://t.me/joinchat/KmUaGRMWdO29JVd3wcCHCg" />
     </Preference>
+    <Preference
+            app:icon="@drawable/ic_update_white_24dp"
+            app:key="update"
+            app:title="检查更新"/>
 </androidx.preference.PreferenceScreen>

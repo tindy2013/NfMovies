@@ -38,7 +38,6 @@ import java.util.List;
 public class SearchFragment extends BaseFragment {
 
     private SearchView searchView;
-    private Toolbar toolbar;
     private RecyclerView resultRv;
     private SearchTask searchTask;
     private MaterialProgressBar progressBar;
@@ -62,7 +61,7 @@ public class SearchFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         searchView = rootView.findViewById(R.id.search_view);
-        toolbar = rootView.findViewById(R.id.search_toolbar);
+        Toolbar toolbar = rootView.findViewById(R.id.search_toolbar);
         resultRv = rootView.findViewById(R.id.result_rv);
         progressBar = rootView.findViewById(R.id.progressbar);
         swipe = rootView.findViewById(R.id.search_swipe_refresh);
@@ -91,7 +90,7 @@ public class SearchFragment extends BaseFragment {
             public boolean onQueryTextSubmit(String query) {
                 if (checkStatus()) {
                     searchView.onActionViewCollapsed();
-                    Toast.makeText(getContext(), R.string.searching + query, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.searching) + query, Toast.LENGTH_SHORT).show();
                     str = query;
                     searchTask = new SearchTask();
                     searchTask.execute(query);
@@ -155,17 +154,6 @@ public class SearchFragment extends BaseFragment {
             }
 
         }
-    }
-
-
-
-
-    public void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) activity.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
     }
 
 }

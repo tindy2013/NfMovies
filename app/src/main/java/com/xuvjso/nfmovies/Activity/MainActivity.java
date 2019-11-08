@@ -1,24 +1,23 @@
 package com.xuvjso.nfmovies.Activity;
 
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.view.MenuItem;
-import com.xuvjso.nfmovies.BuildConfig;
+import com.xuvjso.nfmovies.Entity.Channel;
 import com.xuvjso.nfmovies.Fragment.*;
+import com.xuvjso.nfmovies.Listener.ChannelClickListener;
 import com.xuvjso.nfmovies.R;
 import com.xuvjso.nfmovies.Utils.OkHttpUtil;
 import me.yokeyword.fragmentation.*;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements ChannelClickListener {
 
     private SupportFragment[] fragments;
     private static final int HOME_FRAGMENT = 0;
@@ -28,7 +27,6 @@ public class MainActivity extends BaseActivity {
     private static final int LIKED_FRAGMENT = 4;
     private static final int FRAGMENT_NUM = 5;
 
-    private int HAHAHA;
     private int moreNum;
     private long time;
 
@@ -60,16 +58,12 @@ public class MainActivity extends BaseActivity {
 
     private void clickMore() {
 
-        if (HAHAHA == 1) return;
+        if (application.isAuth() == true) return;
         if (moreNum > 50) return;
 
         long currentTime = System.currentTimeMillis();
         if (moreNum == 50) {
-            SharedPreferences config = getSharedPreferences("hahaha", 0);
-            SharedPreferences.Editor editor = config.edit();
-            editor.putInt("HAHAHA", 1);
-            HAHAHA = 1;
-            editor.commit();
+            application.setAuth(true);
             Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -107,13 +101,16 @@ public class MainActivity extends BaseActivity {
             fragments[LIKED_FRAGMENT] = findFragment(LikedFragment.class);
         }
 
-
-        SharedPreferences config = getSharedPreferences("hahaha", 0);
-        HAHAHA = config.getInt("HAHAHA", 0);
         initView();
 
         new AuTask().execute();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        application.setFirst(false);
+        super.onDestroy();
     }
 
     private long exitTime;
@@ -137,10 +134,25 @@ public class MainActivity extends BaseActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        if (HAHAHA == 1) {
+        if (application.isAuth()) {
             navigation_h.setVisibility(View.VISIBLE);
             navigation.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void OnChannelClick(Channel channel) {
+        String url = channel.getUrl();
+        play(url, null, true);
+    }
+
+    private void showNewVersionMessage(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(msg);
+        builder.setTitle(R.string.new_version_msg);
+        builder.setPositiveButton(R.string.confirm, null);
+        builder.setIcon(R.drawable.ic_info_white_24dp);
+        builder.create().show();
     }
 
     private class AuTask extends AsyncTask<String, String, String> {
@@ -154,16 +166,18 @@ public class MainActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             try {
+                if (s == null) finish();
                 JSONObject j = new JSONObject(s);
                 int status = j.getInt("status");
-                if (status != 1) finish();
                 long version = j.getLong("version");
-                long curVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-                if (curVersion < version)
-                    Toast.makeText(getApplicationContext(), R.string.update, Toast.LENGTH_SHORT).show();
-            } catch (JSONException | PackageManager.NameNotFoundException e) {
+                String msg = j.getString("msg");
+                if (version == application.getVersionCode() && application.isFirst()) showNewVersionMessage(msg);
+                if (application.getVersionCode() < version)  Toast.makeText(getApplicationContext(), R.string.have_new_version, Toast.LENGTH_SHORT).show();
+                if (status != 1) finish();
+            } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
     }

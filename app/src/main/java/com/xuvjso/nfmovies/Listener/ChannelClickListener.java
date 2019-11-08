@@ -1,5 +1,7 @@
 package com.xuvjso.nfmovies.Listener;
 
+import com.xuvjso.nfmovies.Entity.Channel;
+
 public interface ChannelClickListener {
-    void OnChannelClick(int i);
+    void OnChannelClick(Channel channel);
 }

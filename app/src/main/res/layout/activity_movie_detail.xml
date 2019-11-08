@@ -26,7 +26,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.appbar.AppBarLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="@android:color/transparent"
+            android:fitsSystemWindows="true"
+            android:layout_width="match_parent"
+            app:elevation="0dp"
+            android:layout_height="@dimen/bar_height">
     <include layout="@layout/center_logo_bar"/>
+    </com.google.android.material.appbar.AppBarLayout>
     <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

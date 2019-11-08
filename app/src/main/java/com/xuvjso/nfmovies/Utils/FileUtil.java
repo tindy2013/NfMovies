@@ -1,6 +1,7 @@
 package com.xuvjso.nfmovies.Utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -34,5 +35,26 @@ public class FileUtil {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static boolean deleteDirectory(File path) {
+        Log.i("Deleted ", path.getAbsolutePath());
+        if(path.exists()) {
+            File[] files = path.listFiles();
+            if (files == null) {
+                return false;
+            }
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteDirectory(file);
+                } else {
+                    boolean wasSuccessful = file.delete();
+                    if (wasSuccessful) {
+                        Log.i("Deleted ", "successfully");
+                    }
+                }
+            }
+        }
+        return(path.delete());
     }
 }

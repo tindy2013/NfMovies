@@ -65,7 +65,7 @@ public class ChannelGridViewAdapter extends BaseAdapter {
         viewHolder.channelImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickListener.OnChannelClick(position);
+                clickListener.OnChannelClick(channels.get(position));
             }
         });
         convertView.setTag(viewHolder);

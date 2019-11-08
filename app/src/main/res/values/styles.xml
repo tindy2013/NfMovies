@@ -19,7 +19,6 @@
     <style name="AppTheme.Dialog" parent="Theme.MaterialComponents.Dialog">
         <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="android:background">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">#8DB2D3</item>
         <item name="colorAccent">@color/colorUnchecked</item>
     </style>
 

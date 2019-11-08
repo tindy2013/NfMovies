@@ -1,6 +1,7 @@
 package com.xuvjso.nfmovies.Fragment;
 
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class LiveFragment extends BaseFragment implements PopupMenuItemClickListener, ChannelClickListener {
+public class LiveFragment extends BaseFragment implements PopupMenuItemClickListener {
 
     private GridView gridView;
     private PopupMenu popupMenu;
@@ -44,6 +45,7 @@ public class LiveFragment extends BaseFragment implements PopupMenuItemClickList
     private View popupMenuView;
     private ChannelGridViewAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ChannelClickListener channelClickListener;
     public LiveFragment() {
     }
 
@@ -54,6 +56,18 @@ public class LiveFragment extends BaseFragment implements PopupMenuItemClickList
         fragment.setArguments(args);
         return fragment;
     }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof ChannelClickListener) {
+            channelClickListener = (ChannelClickListener) activity;
+        } else {
+            throw new RuntimeException(activity.toString()
+                    + " must implement ChannelClickListener");
+        }
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,21 +103,11 @@ public class LiveFragment extends BaseFragment implements PopupMenuItemClickList
 
     @Override
     public void onPopupMenuItemClick(int position) {
-        adapter = new ChannelGridViewAdapter(getContext(), channels.get(position), LiveFragment.this);
+        adapter = new ChannelGridViewAdapter(getContext(), channels.get(position), channelClickListener);
         gridView.setAdapter(adapter);
         popupMenu.dismiss();
         liveMenu.setText(menus.get(position));
     }
-
-    @Override
-    public void OnChannelClick(int i) {
-        String url = adapter.getChannels().get(i).getUrl();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String player = prefs.getString("player", "1");
-        play(url, Integer.valueOf(player));
-    }
-
-
 
     private class ParseTask extends AsyncTask<String, String, Map<String, List<Channel>>> {
 
@@ -162,7 +166,7 @@ public class LiveFragment extends BaseFragment implements PopupMenuItemClickList
                 channels.add(lives.get(key.get(i)));
             }
 
-            adapter = new ChannelGridViewAdapter(getContext(), channels.get(0), LiveFragment.this);
+            adapter = new ChannelGridViewAdapter(getContext(), channels.get(0), channelClickListener);
             gridView.setAdapter(adapter);
         }
     }
