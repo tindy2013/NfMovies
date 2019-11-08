@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class OkHttpUtil {
-    public final static int READ_TIMEOUT = 5;
-    public final static int CONNECT_TIMEOUT = 5;
+    public final static int READ_TIMEOUT = 10;
+    public final static int CONNECT_TIMEOUT = 10;
     public final static int WRITE_TIMEOUT = 5;
     private static OkHttpUtil mInstance;
     private OkHttpClient mOkHttpClient;

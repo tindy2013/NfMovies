@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -41,6 +42,7 @@ public class BaseActivity extends SupportActivity {
             Toast.makeText(getApplicationContext(), R.string.load_play_url_error, Toast.LENGTH_SHORT).show();
             return;
         }
+        Log.i("PLAY", url);
         NFMoviesApplication app = (NFMoviesApplication) getApplication();
         int player = app.getPlayer();
         switch (player) {

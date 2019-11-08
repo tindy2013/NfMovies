@@ -11,6 +11,8 @@ public class APIUtil {
                 return Tuanzhang.getInstance();
             case DDRK:
                 return DDRK.getInstance();
+            case DUBOKU:
+                return Duboku.getInstance();
         }
 
         return null;
@@ -24,6 +26,8 @@ public class APIUtil {
                 return Tuanzhang.getInstance();
             case DDRK.NAME:
                 return DDRK.getInstance();
+            case Duboku.NAME:
+                return Duboku.getInstance();
         }
         return null;
     }

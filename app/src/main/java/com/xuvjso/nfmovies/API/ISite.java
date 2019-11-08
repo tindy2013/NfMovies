@@ -11,8 +11,8 @@ public interface ISite {
 
     List<Category> getCategories() throws Exception;
     Site getSite();
-    Movie getMovieDetail(Movie movie) throws JSONException;
+    Movie getMovieDetail(Movie movie) throws Exception;
     String getPlayURL(Episode e) throws Exception;
-    Category search(String str);
+    Category search(String str) throws Exception;
     String getName();
 }

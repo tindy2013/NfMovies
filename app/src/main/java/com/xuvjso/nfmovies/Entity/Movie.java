@@ -44,10 +44,11 @@ public class Movie implements Serializable {
 
     private Map<String, List<Episode>> episodes;
 
-    public Movie(String name, String img, String url) {
+    public Movie(String name, String img, String url, Site site) {
         this.img = img;
         this.name = name.trim();
         this.url = url;
+        this.site = site;
         this.description = "";
         this.year = "";
         this.type = "";

@@ -67,8 +67,9 @@ public class HomeFragment extends BaseFragment implements CategoryMoreClickListe
         menus.add(getString(R.string.nfmovies));
         menus.add(getString(R.string.apkgm));
         menus.add(getString(R.string.ddrk));
+        menus.add(getString(R.string.duboku));
         categories = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             categories.add(new ArrayList<Category>());
         }
 

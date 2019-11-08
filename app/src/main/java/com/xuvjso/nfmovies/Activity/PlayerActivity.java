@@ -3,6 +3,7 @@ package com.xuvjso.nfmovies.Activity;
 import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -19,15 +20,12 @@ import com.google.android.exoplayer2.ui.SubtitleView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
-import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.xuvjso.nfmovies.R;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
+
 
 public class PlayerActivity extends AppCompatActivity {
 
@@ -41,7 +39,7 @@ public class PlayerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setImmersive();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_player);
         url = getIntent().getStringExtra("url");
@@ -50,6 +48,24 @@ public class PlayerActivity extends AppCompatActivity {
         initView();
         configureSubtitleView();
         play();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        simpleExoPlayer.setPlayWhenReady(false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        simpleExoPlayer.setPlayWhenReady(true);
+    }
+
+    private void setImmersive() {
+        View view = getWindow().getDecorView();
+        view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
     private void initView() {

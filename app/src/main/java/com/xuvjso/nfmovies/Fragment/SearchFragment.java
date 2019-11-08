@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.xuvjso.nfmovies.API.DDRK;
+import com.xuvjso.nfmovies.API.Duboku;
 import com.xuvjso.nfmovies.API.NfMovies;
 import com.xuvjso.nfmovies.API.Tuanzhang;
 import com.xuvjso.nfmovies.Adapter.CategoryRecyclerViewAdapter;
@@ -125,12 +126,14 @@ public class SearchFragment extends BaseFragment {
         @Override
         protected List<Category> doInBackground(String... strings) {
             List<Category> categories = new ArrayList<>();
-            Category n = NfMovies.getInstance().search(strings[0]);
-            if (n != null && n.getMovies().size() != 0) categories.add(n);
-            Category t = Tuanzhang.getInstance().search(strings[0]);
-            if (t != null && t.getMovies().size() != 0) categories.add(t);
-            Category d = DDRK.getInstance().search(strings[0]);
-            if (d != null && d.getMovies().size() != 0) categories.add(d);
+            Category nf = NfMovies.getInstance().search(strings[0]);
+            if (nf != null && nf.getMovies().size() != 0) categories.add(nf);
+            Category tz = Tuanzhang.getInstance().search(strings[0]);
+            if (tz != null && tz.getMovies().size() != 0) categories.add(tz);
+            Category dd = DDRK.getInstance().search(strings[0]);
+            if (dd != null && dd.getMovies().size() != 0) categories.add(dd);
+            Category db = Duboku.getInstance().search(strings[0]);
+            if (db != null && db.getMovies().size() != 0) categories.add(db);
             return categories;
         }
 

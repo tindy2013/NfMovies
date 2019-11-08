@@ -73,8 +73,7 @@ public class LikedHelper extends SQLiteOpenHelper {
             String url = cursor.getString(cursor.getColumnIndex(Liked.COLUMN_NAME_URL));
             int type = cursor.getInt(cursor.getColumnIndex(Liked.COLUMN_NAME_SITE));
             Site site = Site.values()[type];
-            Movie movie = new Movie(name, img, url);
-            movie.setSite(site);
+            Movie movie = new Movie(name, img, url, site);
             movies.add(movie);
         }
 
@@ -108,8 +107,7 @@ public class LikedHelper extends SQLiteOpenHelper {
         String url = cursor.getString(cursor.getColumnIndex(Liked.COLUMN_NAME_URL));
         int type = cursor.getInt(cursor.getColumnIndex(Liked.COLUMN_NAME_SITE));
         Site site = Site.values()[type];
-        Movie movie = new Movie(name, img, url);
-        movie.setSite(site);
+        Movie movie = new Movie(name, img, url, site);
         cursor.close();
         return movie;
     }

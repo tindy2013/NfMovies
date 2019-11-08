@@ -69,7 +69,7 @@ public class NfMovies implements ISite {
     }
 
     @Override
-    public String getPlayURL(Episode ep) throws MalformedURLException, UnsupportedEncodingException {
+    public String getPlayURL(Episode ep) throws Exception {
         String url = ep.getUrl();
         String html = OkHttpUtil.getInstance().getHtml(url, HOST);
         if (html == null) {
@@ -82,6 +82,7 @@ public class NfMovies implements ISite {
         String shumafen = "";
         if (matcher.find())
             shumafen = String.valueOf(matcher.group(1));
+
 
         shumafen = URLDecoder.decode(shumafen, "utf-8");
         Log.d("NFMOVIES", shumafen);
@@ -196,8 +197,7 @@ public class NfMovies implements ISite {
                 String href = e.attr("href");
                 String img = e.attr("data-original");
                 String name = e.attr("title");
-                Movie m = new Movie(name, HOST + img, HOST + href);
-                m.setSite(SITE);
+                Movie m = new Movie(name, HOST + img, HOST + href, SITE);
                 movies.add(m);
             }
             categories.add(new Category(title, movies, HOST + url));

@@ -63,7 +63,7 @@ public class Tuanzhang implements ISite {
     }
 
     @Override
-    public String getPlayURL(Episode ep) throws Exception {
+    public String getPlayURL(Episode ep) {
         String url = ep.getUrl();
         String html = OkHttpUtil.getInstance().getHtml(url, HOST);
         Pattern p1 = Pattern.compile("window\\.isplay=true;[\\s\\S]*?=\"(.*?)\"");
@@ -90,7 +90,12 @@ public class Tuanzhang implements ISite {
             return null;
         }
 
-        String js = new String(AESUtil.decryptData(str1, str2, iv));
+        String js = null;
+        try {
+            js = new String(AESUtil.decryptData(str1, str2, iv));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Log.i("TUANZHANG", "PLAY" + js);
         Pattern p = Pattern.compile("url:[\\s\\S]*?[\"\'](.*?)[\"\']");
         Log.i("js", js);
@@ -121,8 +126,7 @@ public class Tuanzhang implements ISite {
             String img = e.attr("data-original");
             String name = e.attr("alt");
             Log.i("TUANZHANG", name + ' ' + img);
-            Movie m = new Movie(name, img, href);
-            m.setSite(SITE);
+            Movie m = new Movie(name, img, href, SITE);
             movies.add(m);
         }
         category.setMovies(movies);
@@ -151,8 +155,7 @@ public class Tuanzhang implements ISite {
                 String img = e.attr("data-original");
                 String name = e.attr("alt");
                 Log.i("TUANZHANG", name + ' ' + img);
-                Movie m = new Movie(name, img, href);
-                m.setSite(SITE);
+                Movie m = new Movie(name, img, href, SITE);
                 movies.add(m);
             }
             categories.add(new Category(title, movies, url));
