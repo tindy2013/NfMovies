@@ -14,6 +14,8 @@ import com.xuvjso.nfmovies.NFMoviesApplication;
 import com.xuvjso.nfmovies.R;
 import me.yokeyword.fragmentation.SupportActivity;
 
+import java.io.File;
+
 public class BaseActivity extends SupportActivity {
     private static final String MXPLAYER_AD = "com.mxtech.videoplayer.ad";
     private static final String MXPLAYER_PRO = "com.mxtech.videoplayer.pro";
@@ -42,6 +44,7 @@ public class BaseActivity extends SupportActivity {
             Toast.makeText(getApplicationContext(), R.string.load_play_url_error, Toast.LENGTH_SHORT).show();
             return;
         }
+        if (caption != null) Log.i("CAPTION", caption);
         Log.i("PLAY", url);
         NFMoviesApplication app = (NFMoviesApplication) getApplication();
         int player = app.getPlayer();
@@ -86,8 +89,6 @@ public class BaseActivity extends SupportActivity {
         } else {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setPackage(packageName);
-            //   String[] header = new String[]{"Referer", "https://youku.com-iqiyi.net/"};
-            //    intent.putExtra("headers", header);
             intent.setDataAndType(Uri.parse(url), "video/*");
             startActivity(intent);
         }

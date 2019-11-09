@@ -22,8 +22,10 @@ import com.xuvjso.nfmovies.API.DDRK;
 import com.xuvjso.nfmovies.API.Duboku;
 import com.xuvjso.nfmovies.API.NfMovies;
 import com.xuvjso.nfmovies.API.Tuanzhang;
+import com.xuvjso.nfmovies.Activity.MainActivity;
 import com.xuvjso.nfmovies.Adapter.CategoryRecyclerViewAdapter;
 import com.xuvjso.nfmovies.Entity.Category;
+import com.xuvjso.nfmovies.NFMoviesApplication;
 import com.xuvjso.nfmovies.R;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
@@ -89,6 +91,11 @@ public class SearchFragment extends BaseFragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                if (query.equals(R.string.live_keyword)) {
+                    NFMoviesApplication app = (NFMoviesApplication) getActivity().getApplication();
+                    app.setAuth(true);
+                    return true;
+                }
                 if (checkStatus()) {
                     searchView.onActionViewCollapsed();
                     Toast.makeText(getContext(), getString(R.string.searching) + query, Toast.LENGTH_SHORT).show();

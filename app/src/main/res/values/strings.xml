@@ -4,7 +4,7 @@
     <string name="title_more">更多</string>
     <string name="title_search">搜索</string>
     <string name="title_live">直播</string>
-    <string name="title_liked">喜欢</string>
+    <string name="title_liked">收藏</string>
 
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
@@ -19,6 +19,7 @@
         <a href="https://www.nfmovies.com/">奈菲影视</a>\n\n
         <a href="https://b.apkgm.top/">团长资源</a>\n\n
         <a href="http://ddrk.me/">低端影视</a>\n\n
+        <a href="https://www.duboku.net">独播库</a>\n\n
     </string>
 
     <string name="error">似乎出现了一点问题</string>
@@ -56,5 +57,6 @@
     <string name="updating">正在检查更新</string>
     <string name="already_the_newest_version">已经是最新版本</string>
     <string name="check_new_version_failed">检查更新失败</string>
+    <string name="live_keyword">作者大帅比</string>
 
 </resources>

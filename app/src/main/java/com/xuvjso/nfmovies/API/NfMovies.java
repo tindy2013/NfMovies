@@ -3,6 +3,7 @@ package com.xuvjso.nfmovies.API;
 import android.util.Log;
 import com.xuvjso.nfmovies.Entity.Category;
 import com.xuvjso.nfmovies.Entity.Episode;
+import com.xuvjso.nfmovies.Entity.Episodes;
 import com.xuvjso.nfmovies.Entity.Movie;
 import com.xuvjso.nfmovies.Utils.OkHttpUtil;
 import org.json.JSONException;
@@ -40,8 +41,7 @@ public class NfMovies implements ISite {
         Element de = doc.getElementById("list3");
         movie.setDescription(de.text().trim());
         Elements elements = doc.getElementsByClass("panel clearfix");
-        Map<String, List<Episode>> map = new LinkedHashMap<String, List<Episode>>();
-
+        List<Episodes> episodesList = new ArrayList<>();
         for (Element e: elements) {
             List<Episode> episodes = new ArrayList<>();
             Elements es = e.getElementsByClass("list-15256").select("li>a");
@@ -51,20 +51,10 @@ public class NfMovies implements ISite {
                 episodes.add(episode);
             }
             String title = e.getElementsByClass("option").first().attr("title");
-            if (map.containsKey(title)) {
-                for (int i = 1; i < 4; i++) {
-                    if (!map.containsKey(title + String.valueOf(i))) map.put(title + String.valueOf(i), episodes);
-                    break;
-                }
-            }
-            else map.put(title, episodes);
+            Episodes eps = new Episodes(title, episodes);
+            episodesList.add(eps);
         }
-        movie.setEpisodes(map);
-        Elements infos = doc.getElementsByClass("text-muted");
-        String y = infos.get(5).parent().childNode(1).toString();
-        movie.setYear(y);
-        String t = infos.get(3).siblingElements().get(0).text();
-        movie.setType(t);
+        movie.setEpisodes(episodesList);
         return movie;
     }
 
@@ -155,6 +145,11 @@ public class NfMovies implements ISite {
     @Override
     public String getName() {
         return NAME;
+    }
+
+    @Override
+    public String getHost() {
+        return HOST;
     }
 
     private List<Movie> getSearch(String url,  int page) {

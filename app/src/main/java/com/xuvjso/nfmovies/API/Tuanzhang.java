@@ -3,6 +3,7 @@ package com.xuvjso.nfmovies.API;
 import android.util.Log;
 import com.xuvjso.nfmovies.Entity.Category;
 import com.xuvjso.nfmovies.Entity.Episode;
+import com.xuvjso.nfmovies.Entity.Episodes;
 import com.xuvjso.nfmovies.Entity.Movie;
 import com.xuvjso.nfmovies.Utils.AESUtil;
 import com.xuvjso.nfmovies.Utils.OkHttpUtil;
@@ -43,20 +44,14 @@ public class Tuanzhang implements ISite {
         if (html == null) return null;
         Document doc = Jsoup.parse(html);
         Elements elements = doc.getElementsByClass("moviedteail_list");
-        elements = elements.select("li");
-        for (Element t : elements) {
-            if (t.text().contains("类型")) movie.setType(t.children().text());
-            if (t.text().contains("年份")) movie.setYear(t.children().text());
-        }
         Element epEl = doc.getElementsByClass("paly_list_btn").get(0);
-
+        List<Episodes> episodesList = new ArrayList<>();
         List<Episode> episodes = new ArrayList<>();
         for (Element e: epEl.children()) {
             episodes.add(new Episode(e.text(), e.attr("href")));
         }
-        Map<String, List<Episode>> map = new LinkedHashMap<String, List<Episode>>();
-        map.put(NAME, episodes);
-        movie.setEpisodes(map);
+        episodesList.add(new Episodes(NAME, episodes));
+        movie.setEpisodes(episodesList);
         String de = doc.getElementsByClass("yp_context").text();
         movie.setDescription(de);
         return movie;
@@ -108,6 +103,11 @@ public class Tuanzhang implements ISite {
     @Override
     public String getName() {
         return NAME;
+    }
+
+    @Override
+    public String getHost() {
+        return HOST;
     }
 
     @Override

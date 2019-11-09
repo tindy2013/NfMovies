@@ -13,6 +13,7 @@ public class Movie implements Serializable {
     private String description;
     private String year;
     private String type;
+    private List<Episodes> episodes;
     private Site site;
     public Site getSite() {
         return site;
@@ -42,8 +43,6 @@ public class Movie implements Serializable {
         this.type = type;
     }
 
-    private Map<String, List<Episode>> episodes;
-
     public Movie(String name, String img, String url, Site site) {
         this.img = img;
         this.name = name.trim();
@@ -59,14 +58,6 @@ public class Movie implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Map<String, List<Episode>> getEpisodes() {
-        return episodes;
-    }
-
-    public void setEpisodes(Map<String, List<Episode>> episodes) {
-        this.episodes = episodes;
     }
 
     public String getImg() {
@@ -91,5 +82,13 @@ public class Movie implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public List<Episodes> getEpisodes() {
+        return episodes;
+    }
+
+    public void setEpisodes(List<Episodes> episodes) {
+        this.episodes = episodes;
     }
 }

@@ -15,4 +15,5 @@ public interface ISite {
     String getPlayURL(Episode e) throws Exception;
     Category search(String str) throws Exception;
     String getName();
+    String getHost();
 }

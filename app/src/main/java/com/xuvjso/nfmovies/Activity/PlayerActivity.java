@@ -60,6 +60,7 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         simpleExoPlayer.setPlayWhenReady(true);
+        setImmersive();
     }
 
     private void setImmersive() {

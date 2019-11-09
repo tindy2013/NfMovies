@@ -3,6 +3,7 @@ package com.xuvjso.nfmovies.API;
 import android.util.Log;
 import com.xuvjso.nfmovies.Entity.Category;
 import com.xuvjso.nfmovies.Entity.Episode;
+import com.xuvjso.nfmovies.Entity.Episodes;
 import com.xuvjso.nfmovies.Entity.Movie;
 import com.xuvjso.nfmovies.Utils.OkHttpUtil;
 import org.json.JSONArray;
@@ -75,19 +76,17 @@ public class DDRK implements ISite {
     }
 
     @Override
-    public Movie getMovieDetail(Movie movie) throws JSONException {
+    public Movie getMovieDetail(Movie movie) throws Exception {
         Log.i("DDRK", movie.getUrl());
-        String html = OkHttpUtil.getInstance().getHtml(movie.getUrl(), HOST);
+        Pattern pUrl = Pattern.compile(".*?//ddrk.me/.*?/");
+        String url = movie.getUrl();
+        Matcher mUrl = pUrl.matcher(url);
+        if (mUrl.find()) url = mUrl.group();
+        String html = OkHttpUtil.getInstance().getHtml(url, HOST);
         if (html == null) return null;
-        Pattern tp = Pattern.compile("<br>类型:[\\s\\S*](.*?)<br>");
-        Pattern yp = Pattern.compile("<br>年份:[\\s\\S*](\\d*?)<br>");
         Pattern dp = Pattern.compile("简介:([\\s\\S]*?)<\\/");
         Pattern ip= Pattern.compile("src=\"(.*?douban_cache.*?)\"");
 
-        Matcher tm = tp.matcher(html);
-        if (tm.find()) movie.setType(tm.group(1));
-        Matcher ym = yp.matcher(html);
-        if (ym.find()) movie.setYear(ym.group(1));
         Matcher dm = dp.matcher(html);
         if (dm.find()) movie.setDescription(dm.group(1));
 
@@ -96,6 +95,27 @@ public class DDRK implements ISite {
             if (matcher.find()) movie.setImg(matcher.group(1));
         }
 
+        Document doc = Jsoup.parse(html);
+        Element pageLink = doc.getElementsByClass("page-links").first();
+        List<Episodes> episodesList = new ArrayList<>();
+        List<Episode> ep = getSingleSeason(html);
+        if (pageLink == null)  {
+            episodesList.add(new Episodes(NAME, ep));
+        } else {
+            episodesList.add(new Episodes("1", ep));
+            int num = pageLink.select("a").size();
+            for (int i = 2; i <= num + 1; i++) {
+                String page = url + String.valueOf(i);
+                html = OkHttpUtil.getInstance().getHtml(page, HOST);
+                ep = getSingleSeason(html);
+                episodesList.add(new Episodes(String.valueOf(i), ep));
+            }
+        }
+        movie.setEpisodes(episodesList);
+        return movie;
+    }
+
+    private List<Episode> getSingleSeason(String html) throws Exception {
         Document doc = Jsoup.parse(html);
         Elements episodesEl = doc.getElementsByClass("wp-playlist-script");
         JSONObject object = new JSONObject(episodesEl.get(0).html());
@@ -111,10 +131,7 @@ public class DDRK implements ISite {
             e.setCaption(caption);
             episodes.add(e);
         }
-        Map<String, List<Episode>> map = new LinkedHashMap<String, List<Episode>>();
-        map.put(NAME, episodes);
-        movie.setEpisodes(map);
-        return movie;
+        return episodes;
     }
 
     @Override
@@ -128,6 +145,11 @@ public class DDRK implements ISite {
     @Override
     public String getName() {
         return NAME;
+    }
+
+    @Override
+    public String getHost() {
+        return HOST;
     }
 
     @Override

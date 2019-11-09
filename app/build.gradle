@@ -10,8 +10,8 @@ android {
         applicationId "com.xuvjso.nfmovies"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 7
-        versionName "1.5.1 beta"
+        versionCode 9
+        versionName "1.5.3 beta"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

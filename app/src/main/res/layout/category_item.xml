@@ -17,6 +17,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginStart="5dp"
             android:textColor="@color/colorAccent"
+            android:textStyle="bold"
             android:textSize="15sp" />
     
         <TextView

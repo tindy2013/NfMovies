@@ -4,6 +4,7 @@ import android.service.autofill.FieldClassification;
 import android.util.Log;
 import com.xuvjso.nfmovies.Entity.Category;
 import com.xuvjso.nfmovies.Entity.Episode;
+import com.xuvjso.nfmovies.Entity.Episodes;
 import com.xuvjso.nfmovies.Entity.Movie;
 import com.xuvjso.nfmovies.Utils.OkHttpUtil;
 import org.json.JSONException;
@@ -81,9 +82,9 @@ public class Duboku implements ISite {
             Episode ep = new Episode(epEl.text(), epEl.attr("href"));
             epList.add(ep);
         }
-        Map<String, List<Episode>> m = new HashMap<>();
-        m.put(NAME, epList);
-        movie.setEpisodes(m);
+        List<Episodes> episodesList = new ArrayList<>();
+        episodesList.add(new Episodes(NAME, epList));
+        movie.setEpisodes(episodesList);
         return movie;
     }
 
@@ -137,5 +138,10 @@ public class Duboku implements ISite {
     @Override
     public String getName() {
         return NAME;
+    }
+
+    @Override
+    public String getHost() {
+        return HOST;
     }
 }

@@ -17,6 +17,7 @@ import com.phillipcalvin.iconbutton.IconButton;
 import com.sackcentury.shinebuttonlib.ShineButton;
 import com.xuvjso.nfmovies.API.ISite;
 import com.xuvjso.nfmovies.Adapter.EpisodesPageAdapter;
+import com.xuvjso.nfmovies.Entity.Episodes;
 import com.xuvjso.nfmovies.Helper.LikedHelper;
 import com.xuvjso.nfmovies.NFMoviesApplication;
 import com.xuvjso.nfmovies.UI.AutoHeightViewPager;
@@ -218,7 +219,13 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
         }
 
         @Override
+        protected void onPreExecute() {
+            likeButton.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
         protected void onPostExecute(Object o) {
+            likeButton.setVisibility(View.VISIBLE);
             if (o == null) {
                 likeButton.setChecked(false);
             } else {
@@ -425,16 +432,17 @@ public class MovieDetailActivity extends BaseActivity implements EpisodesFragmen
             movieDescription.setText(movie.getDescription());
             StringBuilder t = new StringBuilder();
             t.append(movie.getYear()).append(' ').append(movie.getType());
-            movieInfo.setText(t.toString());
-            Map<String, List<Episode>> episodes = movie.getEpisodes();
-            if (episodes == null) {
+            movieInfo.setText("来源: " + api.getName());
+            List<Episodes> episodesList = movie.getEpisodes();
+            if (episodesList == null || episodesList.size() == 0) {
                 Toast.makeText(getApplicationContext(), R.string.load_failed, Toast.LENGTH_SHORT).show();
                 return;
             }
             List<Fragment> fragments = new ArrayList<>();
-            List<String> keys = new ArrayList<>(episodes.keySet());
-            for (String key : episodes.keySet()) {
-                fragments.add(EpisodesFragment.newInstance(episodes.get(key)));
+            List<String> keys = new ArrayList<>();
+            for (Episodes eps : episodesList) {
+                keys.add(eps.getName());
+                fragments.add(EpisodesFragment.newInstance(eps.getEpisodes()));
             }
 
             episodesPageAdapter = new EpisodesPageAdapter(getApplicationContext(),
