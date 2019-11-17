@@ -136,7 +136,7 @@
                     app:allow_random_color="false"
                     app:siShape="@raw/heart"/>
 
-            <com.xuvjso.nfmovies.UI.AutoHeightViewPager
+            <com.futuretech.nfmovies.UI.AutoHeightViewPager
                     android:id="@+id/origin_view_pager"
                     android:layout_width="match_parent"
                     app:layout_constraintTop_toBottomOf="@+id/detail_tab" app:layout_constraintStart_toStartOf="parent"
