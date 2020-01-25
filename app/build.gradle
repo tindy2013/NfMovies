@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
 android {
     compileSdkVersion 29
     buildToolsVersion "28.0.3"
@@ -8,12 +12,13 @@ android {
     }
     defaultConfig {
         applicationId "com.futuretech.nfmovies"
-        minSdkVersion 23
+        minSdkVersion 15
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0.0 beta"
+        versionName "1.0.1 beta"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary true
     }
     buildTypes {
         release {
@@ -50,6 +55,9 @@ dependencies {
     implementation 'com.sackcentury:shinebutton:1.0.0'
     implementation 'org.fourthline.cling:cling-support:2.1.1'
     implementation 'org.fourthline.cling:cling-core:2.1.1'
+    implementation 'org.eclipse.jetty:jetty-server:8.1.12.v20130726'
+    implementation 'org.eclipse.jetty:jetty-servlet:8.1.12.v20130726'
+    implementation 'org.eclipse.jetty:jetty-client:8.1.12.v20130726'
     implementation 'com.google.android.exoplayer:exoplayer:2.10.6'
     implementation 'com.umeng.umsdk:analytics:8.0.0'
     implementation 'com.umeng.umsdk:common:2.0.0'

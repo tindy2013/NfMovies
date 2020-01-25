@@ -13,11 +13,11 @@
                 android:scaleType="centerInside"
                 android:layout_width="match_parent"
                 android:layout_height="90dp" app:srcCompat="@drawable/placeholder"
-                android:id="@+id/channel_img"/>
+                android:id="@+id/channel_img"
+            android:focusable="true" />
         <TextView
                 android:background="@color/colorPrimaryDark"
                 android:textAlignment="center"
-                android:text="title"
                 android:textColor="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/channel_title"/>

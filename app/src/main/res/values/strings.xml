@@ -5,9 +5,8 @@
     <string name="title_search">搜索</string>
     <string name="title_live">直播</string>
     <string name="title_liked">收藏</string>
-
-    <string name="title_activity_search">SearchActivity</string>
-    <string name="title_activity_splash">SplashActivity</string>
+	
+	<string name="title_activity_splash">SplashActivity</string>
 
     <string name="nfmovies">奈菲影视</string>
     <string name="apkgm">团长资源</string>
@@ -15,7 +14,7 @@
     <string name="duboku">独播库</string>
 
     <string name="about_string">\n\n
-        <a href="">Made by xuvjso</a>\n\n
+        <a href="">Made by Future Technologies</a>\n\n
         <a href="https://www.nfmovies.com/">奈菲影视</a>\n\n
         <a href="https://b.apkgm.top/">团长资源</a>\n\n
         <a href="http://ddrk.me/">低端影视</a>\n\n
@@ -26,11 +25,13 @@
 
     <string name="select_player">请选择播放器</string>
     <string name="load_play_url_error">加载播放链接失败</string>
+    <string name="system_too_old">您的系统版本过低，无法使用内置播放器。请选择其他播放器。</string>
 
     <string name="not_found">未找到</string>
 
     <string name="like_success">收藏成功</string>
     <string name="dislike_success">取消收藏</string>
+    <string name="not_loaded">未加载内容</string>
 
     <string name="ready_to_play">准备播放</string>
 
@@ -42,8 +43,9 @@
 
     <string name="copy_link_success">复制播放链接成功</string>
 
-    <string name="load_cancelling">正在取消加载...</string>
+    <string name="load_cancelling">正在取消加载……</string>
     <string name="load_failed">加载失败</string>
+    <string name="no_resource">暂时找不到资源哦</string>
 
     <string name="searching">正在搜索</string>
 
@@ -58,5 +60,8 @@
     <string name="already_the_newest_version">已经是最新版本</string>
     <string name="check_new_version_failed">检查更新失败</string>
     <string name="live_keyword">作者大帅比</string>
+    
+    <string name="source">来源: </string>
+    <string name="play">播放</string>
 
 </resources>

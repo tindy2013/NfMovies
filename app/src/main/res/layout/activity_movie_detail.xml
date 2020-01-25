@@ -75,66 +75,74 @@
                         android:layout_height="wrap_content" android:id="@+id/detail_info"
                         android:layout_marginStart="25dp" android:layout_marginEnd="25dp"
                         android:paddingTop="10dp" android:paddingBottom="10dp"/>
+    
                 <TextView
-                        android:text="标题"
-                        android:textAlignment="center"
-                        android:singleLine="true"
-                        android:textColor="@color/colorAccent"
-                        android:textStyle="bold"
-                        android:textSize="16dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/detail_name"
-                        android:layout_marginStart="25dp" android:layout_marginEnd="25dp"
-                        android:paddingBottom="10dp"/>
-                <com.phillipcalvin.iconbutton.IconButton
-                        android:background="@color/netflixRed"
-                        android:textColor="@color/colorAccent"
-                        android:drawableTint="@color/colorAccent"
-                        android:layout_width="match_parent"
-                        android:layout_height="35dp"
-                        android:textStyle="bold"
-                        android:drawableLeft="@drawable/ic_play_arrow_black_24dp"
-                        android:text="播放"
-                        app:iconPadding="5dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginStart="20dp"
-                        android:id="@+id/detail_play"/>
-            </LinearLayout>
-            <TextView
-                    android:textAlignment="viewStart"
-                    android:maxLines="4"
-                    android:textSize="13dp"
-                    android:textColor="@color/colorAccent"
+                    android:id="@+id/detail_name"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp" android:id="@+id/detail_description"
-                    android:padding="10dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.496"
-                    app:layout_constraintTop_toBottomOf="@id/linearLayout"/>
-            <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/detail_tab"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:tabTextColor="@color/colorAccent"
-                    app:tabIndicatorGravity="top"
-                    app:tabIndicatorColor="@color/netflixRed"
-                    app:tabIndicatorHeight="4dp"
-                    app:layout_constraintTop_toBottomOf="@+id/detail_description"
-                    app:layout_constraintStart_toStartOf="parent">
-            </com.google.android.material.tabs.TabLayout>
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
+                    android:paddingBottom="10dp"
+                    android:singleLine="true"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+    
+                <com.phillipcalvin.iconbutton.IconButton
+                    android:id="@+id/detail_play"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/netflixRed"
+                    android:drawableLeft="@drawable/ic_play_arrow_black_24dp"
+                    android:drawableTint="@color/colorAccent"
+                    android:focusable="true"
+                    android:text="@string/play"
+                    android:textColor="@color/colorAccent"
+                    android:textStyle="bold"
+                    app:iconPadding="5dp" />
+            </LinearLayout>
+    
+            <TextView
+                android:id="@+id/detail_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textAlignment="viewStart"
+                android:textColor="@color/colorAccent"
+                android:textSize="13dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.496"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linearLayout" />
+    
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/detail_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detail_description"
+                app:tabIndicatorColor="@color/netflixRed"
+                app:tabIndicatorGravity="top"
+                app:tabIndicatorHeight="4dp"
+                app:tabTextColor="@color/colorAccent"></com.google.android.material.tabs.TabLayout>
+    
             <com.sackcentury.shinebuttonlib.ShineButton
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:id="@+id/detail_like_button"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="25dp"
-                    app:layout_constraintTop_toBottomOf="@+id/detail_description"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:btn_color="@color/colorAccent"
-                    app:btn_fill_color="@color/netflixRed"
-                    app:allow_random_color="false"
-                    app:siShape="@raw/heart"/>
+                android:id="@+id/detail_like_button"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="25dp"
+                android:focusable="true"
+                app:allow_random_color="false"
+                app:btn_color="@color/colorAccent"
+                app:btn_fill_color="@color/netflixRed"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detail_description"
+                app:siShape="@raw/heart" />
 
             <com.futuretech.nfmovies.UI.AutoHeightViewPager
                     android:id="@+id/origin_view_pager"

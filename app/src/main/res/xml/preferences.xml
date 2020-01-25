@@ -8,7 +8,7 @@
             app:title="播放器设置"
             app:summary="%s"
             app:entries="@array/player"
-            app:defaultValue="0"
+            app:defaultValue="1"
             app:entryValues="@array/player_values"/>
     <Preference
             app:icon="@drawable/ic_info_white_24dp"

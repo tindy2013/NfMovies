@@ -6,6 +6,7 @@
     <color name="colorUnchecked">#808080</color>
     <color name="transparentDark">#DD000000</color>
     <color name="netflixRed">#E50914</color>
+    <color name="disabled_grey">#ff212121</color>
     <color name="transparentPrimary">#80000000</color>
     <color name="dialogBackground">#424242</color>
 </resources>
